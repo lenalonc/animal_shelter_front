@@ -1,24 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import logo from "./logo.svg";
+import "./App.css";
+import {
+  RouterProvider,
+  createBrowserRouter,
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
+import Navbar from "./components/Navbar";
+import "bootstrap/dist/css/bootstrap.css";
+import Main from "./components/Main";
+import "./css/Main.css";
+import Footer from "./components/Footer";
+import PetCard from "./components/pets/PetCard";
+import "./css/Owner.css";
+import OwnerPage from "./components/owners/OwnerPage";
+import OwnerAdd from "./components/owners/OwnerAdd";
+import OwnerDetails from "./components/owners/OwnerDetails";
+import AdoptionPage from "./components/adoptions/AdoptionPage";
+import AdoptionAdd from "./components/adoptions/AdoptionAdd";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <div className="Shelter">
+        <Navbar />
+        <div className="body"></div>
+        <Routes>
+          <Route path="/" element={<Main />} />
+          <Route path="owners" element={<OwnerPage />} />
+          <Route path="owners/:id" element={<OwnerDetails />} />
+          <Route path="owners/add" element={<OwnerAdd />} />
+          <Route path="adoptions" element={<AdoptionPage />} />
+          <Route path="adoptions/add" element={<AdoptionAdd />} />
+          <Route path="*" element={<div>404 Not Found</div>} />
+        </Routes>
+        <Footer />
+      </div>
+    </BrowserRouter>
   );
 }
 
