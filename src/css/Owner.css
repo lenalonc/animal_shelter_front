@@ -59,6 +59,8 @@
   padding: 0;
 }
 
+/* Add owner */
+
 .owner-add-page {
   display: flex;
 }
@@ -71,7 +73,7 @@
   margin: 0;
 }
 
-.form-container {
+.form-container-add-owner {
   display: flex;
   border: 3px solid #8a251d;
   border-radius: 10px;
@@ -80,35 +82,123 @@
   background-color: rgb(232, 217, 217);
 }
 
-.form-left {
+.form-left-add-owner {
   flex: 1;
   height: fit-content;
   padding: 50px;
 }
 
-.form-right {
+.form-right-add-owner {
   flex: 1;
   margin-left: 50px;
 }
 
-.form-image {
+.form-image-add-owner {
   width: 100%;
   size: 500px;
   border-radius: 0 8px 8px 0;
 }
 
-.form-group {
+.form-group-add-owner {
   margin-bottom: 20px;
 }
 
-label {
+.label-add-owner {
   display: block;
   font-weight: bold;
 }
 
-input {
+.input-add-owner {
   width: 100%;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 5px;
+}
+
+.form-left-add-owner input:focus {
+  outline-color: #8a251d;
+}
+
+/* Owner details */
+
+.owner-details-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url(../img/poz-01.jpg);
+}
+
+.owner-details {
+  max-width: 600px;
+  width: 100%;
+  min-width: fit-content;
+  border: 3px solid #8a251d;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  margin: 50px;
+  background-color: rgb(232, 217, 217);
+}
+
+.owner-details-header {
+  /* border-bottom: 2px solid #8a251d; */
+  padding: 30px 0 0 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  border-radius: 10px 10px 0 0;
+  /* box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.1); */
+}
+
+.owner-details h2 {
+  margin-top: 0;
+  color: #8a251d;
+  margin-bottom: 30;
+  font-size: 35px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  font-weight: 600;
+}
+
+.owner-details-content {
+  padding: 20px;
+}
+
+.field-owner-details {
+  margin-bottom: 15px;
+}
+
+.field-owner-details label {
+  font-size: 17px;
+  font-weight: 500;
+  color: #450c08;
+}
+
+.field-owner-details label.focused-label {
+  color: #8a251d;
+  font-weight: 550;
+  font-size: 1.2em;
+}
+
+.field-owner-details input:focus {
+  outline-color: #8a251d;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="date"] {
+  width: 100%;
+  padding: 5px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.buttons-owner-details {
+  margin-top: 20px;
+  display: flex;
+}
+
+.btn-owner-details {
+  margin: 20px 10px 0 10px;
+  padding: 10px;
+  width: fit-content;
 }

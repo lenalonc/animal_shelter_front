@@ -5,8 +5,8 @@ const OwnerAddForm = () => {
   const fields = ["Email", "Name", "Lastname"];
 
   return (
-    <div className="form-container">
-      <div className="form-left">
+    <div className="form-container-add-owner">
+      <div className="form-left-add-owner">
         <h2
           style={{
             marginBottom: 30,
@@ -20,12 +20,13 @@ const OwnerAddForm = () => {
         </h2>
         <form>
           {fields.map((field, index) => (
-            <div className="form-group" key={index}>
-              <label htmlFor={field.toLowerCase()}>{field}:</label>
+            <div className="form-group-add-owner " key={index}>
+              <label htmlFor={field.toLowerCase()}  className="label-add-owner">{field}:</label>
               <input
                 type={field === "Email" ? "email" : "text"}
                 id={field.toLowerCase()}
                 name={field.toLowerCase()}
+                className="input-add-owner"
                 required
               />
             </div>
@@ -49,8 +50,8 @@ const OwnerAddForm = () => {
           </div>
         </form>
       </div>
-      <div className="form-right">
-        <img src={slika} alt="placeholder" className="form-image" />
+      <div className="form-right-add-owner">
+        <img src={slika} alt="placeholder" className="form-image-add-owner " />
       </div>
     </div>
   );
