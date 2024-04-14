@@ -123,6 +123,8 @@
 
 .owner-details-page {
   display: flex;
+  position: relative; /* Ensure relative positioning for absolute children */
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   background-image: url(../img/poz-01.jpg);
@@ -201,4 +203,11 @@ input[type="date"] {
   margin: 20px 10px 0 10px;
   padding: 10px;
   width: fit-content;
+}
+
+.btn-back {
+  align-self: flex-start;
+  position: absolute;
+  bottom: 50px;
+  left: 20px;
 }
