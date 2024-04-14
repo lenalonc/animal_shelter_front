@@ -1,9 +1,23 @@
-.container-custom {
-  /* background-image: url("../img/poz2-01.jpg"); */
-  /* background-size: cover;
-  background-position: center;
-  height: 100vh;
-  margin: 0; */
+/* Scrollbar */
+
+/* Width */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #993e37;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #8a251d;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #993e37;
 }
 
 .navbar-nav {
@@ -52,17 +66,17 @@
 }
 
 .dropdown-menu .dropdown-item {
-  transition: box-shadow 0.3s ease; 
+  transition: box-shadow 0.3s ease;
 }
 
 .dropdown-menu .dropdown-item:hover {
-  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.3); 
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.3);
 }
 
 .dropdown-menu .dropdown-item.active,
 .dropdown-menu .dropdown-item:focus {
-  color: white !important; 
-  background-color: #5e1914 !important; 
+  color: white !important;
+  background-color: #5e1914 !important;
 }
 
 .logo-small {
