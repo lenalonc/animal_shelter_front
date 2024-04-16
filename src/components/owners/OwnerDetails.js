@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import api from "../../api/Api";
 import { Link } from "react-router-dom";
 
+//TODO: after deleting an owner the edit button should not be useable as that owner doesnt exist anymore
+
 const OwnerDetails = () => {
   const { id } = useParams();
 
@@ -53,7 +55,13 @@ const OwnerDetails = () => {
       console.log(owner);
       setIsEditing(false);
     } catch (err) {
-      console.log(`Error: ${err.message}`);
+      if (err.response) {
+        console.log(err.response.data);
+        console.log(err.response.status);
+        console.log(err.response.headers);
+      } else {
+        console.log(`Error: ${err.message}`);
+      }
     }
   };
 
@@ -61,7 +69,6 @@ const OwnerDetails = () => {
     try {
       await api.delete("/owner/" + id);
       setIsEditing(false);
-      //E da znas ovde treba da namestis da kad se izbrise vise nema ni edit dugmeta i ne moze nista da se radi samo kao go back to view
     } catch (err) {
       console.log(`Error: ${err.message}`);
     }
@@ -108,7 +115,7 @@ const OwnerDetails = () => {
                   <input
                     type="text"
                     name={key}
-                    value={key === "id" ? owner[key] : owner[key] || ""} // If key is "id", make it not editable
+                    value={key === "id" ? owner[key] : owner[key] || ""}
                     onChange={
                       isEditing && key !== "id" ? handleInputChange : null
                     }

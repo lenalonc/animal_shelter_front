@@ -105,7 +105,19 @@
 
 .label-add-owner {
   display: block;
-  font-weight: bold;
+  font-size: 17px;
+  font-weight: 500;
+  color: #450c08;
+}
+
+.form-group-add-owner label.focused-label {
+  color: #8a251d;
+  font-weight: 550;
+  font-size: 1.2em;
+}
+
+.form-group-add-owner input:focus {
+  outline-color: #8a251d;
 }
 
 .input-add-owner {
@@ -123,7 +135,7 @@
 
 .owner-details-page {
   display: flex;
-  position: relative; /* Ensure relative positioning for absolute children */
+  position: relative;
   flex-direction: row;
   justify-content: center;
   align-items: center;
