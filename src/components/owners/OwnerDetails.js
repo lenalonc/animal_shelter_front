@@ -3,7 +3,8 @@ import { useParams } from "react-router-dom";
 import api from "../../api/Api";
 import { Link } from "react-router-dom";
 
-//TODO: after deleting an owner the edit button should not be useable as that owner doesnt exist anymore
+//TODO: After deleting an owner the edit button should not be useable as that owner doesnt exist anymore
+//TODO: Save check: if no info was change make the save button unavailable 
 
 const OwnerDetails = () => {
   const { id } = useParams();
