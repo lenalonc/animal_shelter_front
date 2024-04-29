@@ -14,11 +14,14 @@ import "./css/Main.css";
 import Footer from "./components/Footer";
 import PetCard from "./components/pets/PetCard";
 import "./css/Owner.css";
+import "./css/Pet.css";
 import OwnerPage from "./components/owners/OwnerPage";
 import OwnerAdd from "./components/owners/OwnerAdd";
 import OwnerDetails from "./components/owners/OwnerDetails";
 import AdoptionPage from "./components/adoptions/AdoptionPage";
 import AdoptionAdd from "./components/adoptions/AdoptionAdd";
+import PetPage from "./components/pets/PetPage";
+import PetDetails from "./components/pets/PetDetails";
 
 function App() {
   return (
@@ -33,6 +36,8 @@ function App() {
           <Route path="owners/add" element={<OwnerAdd />} />
           <Route path="adoptions" element={<AdoptionPage />} />
           <Route path="adoptions/add" element={<AdoptionAdd />} />
+          <Route path="pets" element={<PetPage />} />
+          <Route path="pets/:id" element={<PetDetails />} />
           <Route path="*" element={<div>404 Not Found</div>} />
         </Routes>
         <Footer />

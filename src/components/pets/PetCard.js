@@ -1,16 +1,22 @@
-const PetCard = () => {
-  const imageUrl = "../../img/cat-01.jpg";
+import React from "react";
+import { Link } from "react-router-dom";
+
+const PetCard = ({ pet, image }) => {
+  const altText = image ? `Image of ${pet.name}` : "No picture";
 
   return (
-    <div className="card" style={{ width: "18rem" }}>
-      <img src={imageUrl} className="card-img-top" alt="nema slicice" />
-      <div className="card-body">
-        <p className="card-text">
-          Some quick example text to build on the card title and make up the
-          bulk of the card's content.
-        </p>
+    <Link to={`${pet.id}`} style={{ textDecoration: "none" }}>
+      <div className="card card-pet" style={{ width: "18rem" }}>
+        <img
+          src={image || "placeholder.png"}
+          className="card-img-top img-card-pet"
+          alt={altText}
+        />
+        <div className="card-body">
+          <h5 className="card-title">{pet.name}</h5>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

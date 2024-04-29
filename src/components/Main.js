@@ -43,8 +43,8 @@ const Main = () => {
           </div>
         </div>
       </div>
-      <div className="container my-5">
-        <div className="p-4 text-center bg-body-tertiary rounded-3">
+      <div className="container mt-5 ">
+        <div className="p-4 text-center bg-body-tertiary rounded-3 container-ann">
           <img
             src={require("../img/logoRed_Paw Print Heart Connected.png")}
             className="logo-jumbo"

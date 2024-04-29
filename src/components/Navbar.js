@@ -44,14 +44,17 @@ const Navbar = () => {
                 </a>
               </li>
               <li className="nav-item dropdown">
-                <a className="nav-link dropdown-toggle nav-text" href="#">
+                <NavLink
+                  className="nav-link dropdown-toggle nav-text"
+                  to={"pets"}
+                >
                   Pets
-                </a>
+                </NavLink>
                 <ul className="dropdown-menu">
                   <li>
-                    <a className="dropdown-item nav-drop" href="#">
+                    <NavLink className="dropdown-item nav-drop" to={"pets"}>
                       View All
-                    </a>
+                    </NavLink>
                   </li>
                   <li>
                     <a className="dropdown-item nav-drop" href="#">
