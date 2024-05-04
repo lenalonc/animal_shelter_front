@@ -8,13 +8,13 @@ const PetDetails = () => {
   const [pet, setPet] = useState(null);
   const [petImage, setPetImage] = useState(null);
 
+
   useEffect(() => {
     const getPetDetails = async () => {
       try {
         const response = await api.get(`/pet/${id}`);
         setPet(response.data);
         loadPetImage(response.data);
-        console.log(response.data);
       } catch (err) {
         console.error("Error fetching pet details:", err);
       }
@@ -79,7 +79,7 @@ const PetDetails = () => {
         </div>
         <div className="pet-info">
           <div className="pet-info-info">
-            <h2>Hi, my name is {pet.name}</h2>
+            <h2>Hi, my name is {pet.name}.</h2>
             <p>
               <span>Gender:</span> {sex}
             </p>
