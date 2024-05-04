@@ -5,7 +5,10 @@ const PetCard = ({ pet, image }) => {
   const altText = image ? `Image of ${pet.name}` : "No picture";
 
   return (
-    <Link to={`${pet.id}`} style={{ textDecoration: "none" }}>
+    <Link
+      to={`${pet.id}`}
+      style={{ textDecoration: "none" }}
+    >
       <div className="card card-pet" style={{ width: "18rem" }}>
         <img
           src={image || "placeholder.png"}

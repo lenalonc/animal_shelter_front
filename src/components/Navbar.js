@@ -46,20 +46,23 @@ const Navbar = () => {
               <li className="nav-item dropdown">
                 <NavLink
                   className="nav-link dropdown-toggle nav-text"
-                  to={"pets"}
+                  to={"pets?type=All"}
                 >
                   Pets
                 </NavLink>
                 <ul className="dropdown-menu">
                   <li>
-                    <NavLink className="dropdown-item nav-drop" to={"pets"}>
+                    <NavLink
+                      className="dropdown-item nav-drop"
+                      to={"pets?type=All"}
+                    >
                       View All
                     </NavLink>
                   </li>
                   <li>
-                    <a className="dropdown-item nav-drop" href="#">
+                    <NavLink className="dropdown-item nav-drop" to={"pets/add"}>
                       Add
-                    </a>
+                    </NavLink>
                   </li>
                 </ul>
               </li>

@@ -22,7 +22,7 @@ const HeartButton = () => {
       angle: { 0: 45 },
       y: -10,
       count: 10,
-      radius: 100,
+      radius: 200,
       children: {
         shape: "circle",
         radius: 30,

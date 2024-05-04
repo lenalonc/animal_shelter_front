@@ -1,6 +1,13 @@
+import { Link, useNavigate } from "react-router-dom";
 import { ReactComponent as Icon } from "../img/arrow-right.svg";
 
 const Main = () => {
+  const navigate = useNavigate();
+
+  const handleAdoptClick = (type) => {
+    navigate(`/pets?type=${type}`);
+  };
+
   return (
     <div className="container-custom">
       <div className="panel">
@@ -9,7 +16,11 @@ const Main = () => {
           src={require("../img/pas2-01.png")}
           style={{ height: 300, width: "auto" }}
         ></img>
-        <button type="button" className="btn btn-primary btn-adopt">
+        <button
+          type="button"
+          className="btn btn-primary btn-adopt"
+          onClick={() => handleAdoptClick("All")}
+        >
           ADOPT NOW
         </button>
         <img className="quote-img" src={require("../img/maki-01.png")}></img>
@@ -23,7 +34,10 @@ const Main = () => {
             style={{ height: "250px", borderRadius: "15px" }}
           ></img>
           <div className="card-body-animal">
-            <button className="button-27" role="button">
+            <button
+              className="button-27"
+              onClick={() => handleAdoptClick("Cats")}
+            >
               ADOPT A CAT
             </button>
           </div>
@@ -37,7 +51,10 @@ const Main = () => {
             style={{ height: "250px", borderRadius: "15px" }}
           ></img>
           <div className="card-body-animal">
-            <button className="button-27" role="button">
+            <button
+              className="button-27"
+              onClick={() => handleAdoptClick("Dogs")}
+            >
               ADOPT A DOG
             </button>
           </div>
