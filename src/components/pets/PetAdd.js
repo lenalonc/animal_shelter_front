@@ -1,8 +1,10 @@
-// PetAdd.jsx
-
 import React, { useState, useEffect } from "react";
 import api from "../../api/Api";
 import SelectionBox from "./SelectionPetAdd";
+import GenderSelect from "./GenderSelect";
+import SelectBox from "./SelectBox";
+
+//TODO: when searching an option if its not selected from options it should throw a
 
 const PetAdd = () => {
   const [fields, setFields] = useState([]);
@@ -47,10 +49,20 @@ const PetAdd = () => {
     fetchAnimals();
   }, []);
 
+  const fetchBreeds = async (animalType) => {
+    try {
+      const response = await api.get(`/pet/breeds/${animalType}`);
+      setBreeds(response.data);
+    } catch (error) {
+      console.error("Error fetching breeds:", error);
+    }
+  };
+
   const handleInputChange = (e) => {
     const value =
       e.target.type === "checkbox" ? e.target.checked : e.target.value;
     setFormData({ ...formData, [e.target.name]: value });
+    console.log(formData);
   };
 
   const handleSubmit = (e) => {
@@ -59,11 +71,17 @@ const PetAdd = () => {
   };
 
   const handleInputFocus = (e) => {
-    e.target.previousElementSibling.classList.add("focused-label");
+    const previousSibling = e.target.previousElementSibling;
+    if (previousSibling) {
+      previousSibling.classList.add("focused-label");
+    }
   };
 
   const handleInputBlur = (e) => {
-    e.target.previousElementSibling.classList.remove("focused-label");
+    const previousSibling = e.target.previousElementSibling;
+    if (previousSibling) {
+      previousSibling.classList.remove("focused-label");
+    }
   };
 
   const getCurrentDate = () => {
@@ -80,7 +98,14 @@ const PetAdd = () => {
 
   const handleAnimalChange = (animalInfo) => {
     setFormData({ ...formData, animal: animalInfo });
-    console.log(formData);
+    setBreedDisabled(false);
+    console.log(animalInfo);
+    // fetchBreeds(animalInfo.type.toLowerCase());
+    // console.log(breeds);
+  };
+
+  const handleBreedChange = (breedInfo) => {
+    setFormData({ ...formData, breed: breedInfo });
   };
 
   return (
@@ -101,8 +126,8 @@ const PetAdd = () => {
                 name={"name"}
                 className="input-add-owner input-pet-prime"
                 required
-                onFocus={handleInputFocus}
-                onBlur={handleInputBlur}
+                // onFocus={handleInputFocus}
+                // onBlur={handleInputBlur}
                 onChange={handleInputChange}
               />
             </div>
@@ -110,50 +135,58 @@ const PetAdd = () => {
               <label htmlFor={"text"} className="label-add-owner">
                 Type of animal:
               </label>
-              <div className="select-segment">
-                <SelectionBox
-                  type={"text"}
-                  id={"animal"}
-                  name={"animal"}
-                  className="input-add-owner input-pet-text"
-                  required
-                  label="Select Gender"
-                  options={animals}
-                  onChange={handleAnimalChange}
-                  attribute="type"
-                  onFocus={handleInputFocus}
-                  onBlur={handleInputBlur}
-                />
-              </div>
+              {/* <div className="select-segment"> */}
+              <SelectBox
+                type={"text"}
+                id={"animal"}
+                name={"animal"}
+                className="input-add-owner input-pet-text"
+                required
+                options={animals}
+                label={"type"}
+                onChange={handleAnimalChange}
+                width={"200px"}
+                onFocus={handleInputFocus}
+                onBlur={handleInputBlur}
+              />
+              {/* </div> */}
             </div>
             <div className="pet-input" style={{ flex: " 1 1" }}>
               <label htmlFor={"text"} className="label-add-owner">
                 Breed:
               </label>
-              <input
+              <SelectionBox
                 type={"text"}
                 id={"breed"}
                 name={"breed"}
                 className="input-add-owner input-pet-prime"
                 required
+                label="Select Breed"
+                options={breeds}
+                onChange={handleBreedChange}
+                width={"180px"}
+                attribute="breed"
+                disabled={breedDisabled}
                 onFocus={handleInputFocus}
                 onBlur={handleInputBlur}
-                onChange={handleInputChange}
               />
             </div>
             <div className="pet-input" style={{ flex: " 1 1 " }}>
               <label htmlFor={"text"} className="label-add-owner">
                 Gender:
               </label>
-              <input
-                type={"text"}
-                id={"sex"}
-                name={"sex"}
-                className="input-add-owner input-pet-text"
-                required
-                onFocus={handleInputFocus}
-                onBlur={handleInputBlur}
-                onChange={handleInputChange}
+              <SelectBox
+                onChange={(selectedOption) =>
+                  handleInputChange({
+                    target: { name: "sex", value: selectedOption.label },
+                  })
+                }
+                options={[
+                  { id: "male", label: "Male" },
+                  { id: "female", label: "Female" },
+                ]}
+                label={"label"}
+                width={"200px"}
               />
             </div>
             <div className="pet-input" style={{ flex: " 1 1" }}>
