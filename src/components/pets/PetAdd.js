@@ -282,11 +282,10 @@ const PetAdd = () => {
                 name="weight"
                 className="input-add-owner input-pet-num"
                 required
-                onFocus={handleInputFocus}
-                onBlur={handleInputBlur}
                 onChange={handleInputChange}
                 value={formData.weight || 0}
                 min={0}
+                step={0.1}
               />{" "}
               <span style={{ color: "#6c1d17", fontSize: 18, fontWeight: 400 }}>
                 kg
