@@ -4,6 +4,7 @@ import SelectionBox from "./SelectionPetAdd";
 import GenderSelect from "./GenderSelect";
 import SelectBox from "./SelectBox";
 import BreedSelectBox from "./BreedSelectBox";
+import SelectMultiple from "./SelectMultiple";
 
 //TODO: when searching an option if its not selected from options it should throw a
 //TODO: when u delete the selection of type of pet it shoudl delete that in the form and also affect the breeds selection
@@ -193,15 +194,23 @@ const PetAdd = () => {
               <label htmlFor={"text"} className="label-add-owner">
                 Colors:
               </label>
-              <input
+              <SelectMultiple
                 type={"text"}
                 id={"primaryColors"}
                 name={"primaryColors"}
                 className="input-add-owner input-pet-prime"
                 required
-                onFocus={handleInputFocus}
-                onBlur={handleInputBlur}
-                onChange={handleInputChange}
+                onChange={(selectedOptions) =>
+                  handleInputChange({
+                    target: {
+                      name: "primaryColors",
+                      value: selectedOptions
+                        .map((option) => option.value)
+                        .join(" "),
+                    },
+                  })
+                }
+                width={"300px"}
               />
             </div>
             <div className="pet-input" style={{ flex: " 1 1" }}>

@@ -1,22 +1,7 @@
+import React from "react";
 import CreatableSelect from "react-select/creatable";
 
-const SelectBox = ({ onChange, options, label, width }) => {
-  const optionsReformated = options.map((op) => ({
-    value: op.id,
-    label: op[label],
-  }));
-
-  const handleChange = (newValue, actionMeta) => {
-    if (
-      actionMeta.action === "select-option" ||
-      actionMeta.action === "create-option"
-    ) {
-      onChange(
-        newValue ? options.find((option) => option.id === newValue.value) : null
-      );
-    }
-  };
-
+const SelectMultiple = ({ onChange }) => {
   const customStyles = {
     option: (provided, state) => ({
       ...provided,
@@ -43,24 +28,33 @@ const SelectBox = ({ onChange, options, label, width }) => {
         borderColor: state.isFocused ? "black" : "rgb(204, 204, 204)",
         boxShadow: state.isFocused ? "0 0 0 0.85px black" : provided.boxShadow,
       },
-      width: width,
+      width: "300px",
     }),
+
     menu: (provided) => ({
       ...provided,
-      width: width,
+      width: "300px",
     }),
   };
 
+  const basicColors = [
+    { value: "orange", label: "Orange" },
+    { value: "brown", label: "Brown" },
+    { value: "grey", label: "Grey" },
+    { value: "yellow", label: "Yellow" },
+    { value: "black", label: "Black" },
+    { value: "white", label: "White" },
+  ];
+
   return (
     <CreatableSelect
-      isClearable
-      options={optionsReformated}
-      onChange={handleChange}
+      isMulti
+      options={basicColors}
       styles={customStyles}
       isValidNewOption={() => false}
-      // onBlur={onBlur}
+      onChange={onChange}
     />
   );
 };
 
-export default SelectBox;
+export default SelectMultiple;
