@@ -3,8 +3,10 @@ import api from "../../api/Api";
 import SelectionBox from "./SelectionPetAdd";
 import GenderSelect from "./GenderSelect";
 import SelectBox from "./SelectBox";
+import BreedSelectBox from "./BreedSelectBox";
 
 //TODO: when searching an option if its not selected from options it should throw a
+//TODO: when u delete the selection of type of pet it shoudl delete that in the form and also affect the breeds selection
 
 const PetAdd = () => {
   const [fields, setFields] = useState([]);
@@ -25,6 +27,7 @@ const PetAdd = () => {
   const [animals, setAnimals] = useState([]);
   const [breeds, setBreeds] = useState([]);
   const [breedDisabled, setBreedDisabled] = useState(true);
+  const [selectedAnimalType, setSelectedAnimalType] = useState(null);
 
   useEffect(() => {
     const fetchFields = async () => {
@@ -99,9 +102,7 @@ const PetAdd = () => {
   const handleAnimalChange = (animalInfo) => {
     setFormData({ ...formData, animal: animalInfo });
     setBreedDisabled(false);
-    console.log(animalInfo);
-    // fetchBreeds(animalInfo.type.toLowerCase());
-    // console.log(breeds);
+    setSelectedAnimalType(animalInfo.type.toLowerCase());
   };
 
   const handleBreedChange = (breedInfo) => {
@@ -155,20 +156,19 @@ const PetAdd = () => {
               <label htmlFor={"text"} className="label-add-owner">
                 Breed:
               </label>
-              <SelectionBox
+              <BreedSelectBox
                 type={"text"}
                 id={"breed"}
                 name={"breed"}
                 className="input-add-owner input-pet-prime"
                 required
-                label="Select Breed"
                 options={breeds}
+                setOptions={setBreeds}
+                label={"breed"}
+                disabled={!selectedAnimalType}
+                selectedAnimalType={selectedAnimalType}
                 onChange={handleBreedChange}
-                width={"180px"}
-                attribute="breed"
-                disabled={breedDisabled}
-                onFocus={handleInputFocus}
-                onBlur={handleInputBlur}
+                width={"300px"}
               />
             </div>
             <div className="pet-input" style={{ flex: " 1 1 " }}>
@@ -208,15 +208,24 @@ const PetAdd = () => {
               <label htmlFor={"text"} className="label-add-owner">
                 Size:
               </label>
-              <input
+              <SelectBox
                 type={"text"}
                 id={"size"}
                 name={"size"}
                 className="input-add-owner input-pet-text"
                 required
-                onFocus={handleInputFocus}
-                onBlur={handleInputBlur}
-                onChange={handleInputChange}
+                onChange={(selectedOption) =>
+                  handleInputChange({
+                    target: { name: "size", value: selectedOption.label },
+                  })
+                }
+                options={[
+                  { id: "s", label: "Small" },
+                  { id: "m", label: "Medium" },
+                  { id: "l", label: "Large" },
+                ]}
+                label={"label"}
+                width={"200px"}
               />
             </div>
             <div className="pet-input">

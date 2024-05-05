@@ -11,7 +11,6 @@ const SelectBox = ({ onChange, options, label, width }) => {
       actionMeta.action === "select-option" ||
       actionMeta.action === "create-option"
     ) {
-      console.log(newValue.value);
       onChange(
         newValue ? options.find((option) => option.id === newValue.value) : null
       );
@@ -45,6 +44,10 @@ const SelectBox = ({ onChange, options, label, width }) => {
         boxShadow: state.isFocused ? "0 0 0 0.85px black" : provided.boxShadow,
       },
       width: width,
+    }),
+    menu: (provided) => ({
+      ...provided,
+      width: width, // Set the width of the dropdown menu
     }),
   };
 
