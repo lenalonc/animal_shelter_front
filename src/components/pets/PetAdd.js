@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import api from "../../api/Api";
-import SelectionBox from "./SelectionPetAdd";
-import GenderSelect from "./GenderSelect";
 import SelectBox from "./SelectBox";
 import BreedSelectBox from "./BreedSelectBox";
 import SelectMultiple from "./SelectMultiple";
 
 //TODO: when searching an option if its not selected from options it should throw a
 //TODO: when u delete the selection of type of pet it shoudl delete that in the form and also affect the breeds selection
+//TODO: success modal for when pet is saved
+//TODO: error when saving modal
 
 const PetAdd = () => {
   const [fields, setFields] = useState([]);
@@ -25,10 +25,13 @@ const PetAdd = () => {
     vaccinated: false,
     sterilization: false,
   });
+
   const [animals, setAnimals] = useState([]);
   const [breeds, setBreeds] = useState([]);
   const [breedDisabled, setBreedDisabled] = useState(true);
   const [selectedAnimalType, setSelectedAnimalType] = useState(null);
+  const [picture, setPicture] = useState(null);
+  const [id, setId] = useState(null);
 
   useEffect(() => {
     const fetchFields = async () => {
@@ -51,16 +54,8 @@ const PetAdd = () => {
 
     fetchFields();
     fetchAnimals();
+    formData.dateOfArrival = getCurrentDate();
   }, []);
-
-  const fetchBreeds = async (animalType) => {
-    try {
-      const response = await api.get(`/pet/breeds/${animalType}`);
-      setBreeds(response.data);
-    } catch (error) {
-      console.error("Error fetching breeds:", error);
-    }
-  };
 
   const handleInputChange = (e) => {
     const value =
@@ -71,8 +66,26 @@ const PetAdd = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
+
+    const savePet = async () => {
+      try {
+        const response = await api.post("/pet", formData);
+        console.log(response.data);
+        setId(response.data.id);
+      } catch (error) {
+        console.error("Error fetching fields:", error);
+      }
+    };
+
+    savePet();
   };
+
+  useEffect(() => {
+    if (picture && id) {
+      console.log(id);
+      savePictureLocally(picture);
+    }
+  }, [id]);
 
   const handleInputFocus = (e) => {
     const previousSibling = e.target.previousElementSibling;
@@ -110,6 +123,25 @@ const PetAdd = () => {
     setFormData({ ...formData, breed: breedInfo });
   };
 
+  const handlePictureChange = (e) => {
+    setPicture(e.target.files[0]);
+  };
+
+  const savePictureLocally = (picture) => {
+    const send = new FormData();
+    send.append("picture", picture);
+    send.append("name", "pet" + id);
+
+    api
+      .post("/pet/savePicture", send)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error saving picture:", error);
+      });
+  };
+
   return (
     <div className="add-pet-page">
       <div className="pet-add-form">
@@ -137,7 +169,6 @@ const PetAdd = () => {
               <label htmlFor={"text"} className="label-add-owner">
                 Type of animal:
               </label>
-              {/* <div className="select-segment"> */}
               <SelectBox
                 type={"text"}
                 id={"animal"}
@@ -151,7 +182,6 @@ const PetAdd = () => {
                 onFocus={handleInputFocus}
                 onBlur={handleInputBlur}
               />
-              {/* </div> */}
             </div>
             <div className="pet-input" style={{ flex: " 1 1" }}>
               <label htmlFor={"text"} className="label-add-owner">
@@ -360,6 +390,25 @@ const PetAdd = () => {
                 </div>
                 <label htmlFor="vaccinated" className="label-add-owner">
                   Sterilized
+                </label>
+              </div>
+            </div>
+            <div className="pet-input" style={{ flex: "1 1 300px" }}>
+              <label htmlFor="picture" className="label-add-owner">
+                Picture:
+              </label>
+              <div className="custom-file-upload">
+                <input
+                  type="file"
+                  id="picture"
+                  name="picture"
+                  className="input-add-owner input-pet-prime"
+                  accept="image/*"
+                  onChange={handlePictureChange}
+                  style={{ display: "none" }} // hide the default file input
+                />
+                <label htmlFor="picture" className="custom-button-file">
+                  Choose File
                 </label>
               </div>
             </div>
