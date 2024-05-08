@@ -70,7 +70,6 @@ const PetAdd = () => {
     const savePet = async () => {
       try {
         const response = await api.post("/pet", formData);
-        console.log(response.data);
         setId(response.data.id);
       } catch (error) {
         console.error("Error fetching fields:", error);
@@ -160,8 +159,6 @@ const PetAdd = () => {
                 name={"name"}
                 className="input-add-owner input-pet-prime"
                 required
-                // onFocus={handleInputFocus}
-                // onBlur={handleInputBlur}
                 onChange={handleInputChange}
               />
             </div>

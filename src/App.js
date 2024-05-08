@@ -12,7 +12,6 @@ import "bootstrap/dist/css/bootstrap.css";
 import Main from "./components/Main";
 import "./css/Main.css";
 import Footer from "./components/Footer";
-import PetCard from "./components/pets/PetCard";
 import "./css/Owner.css";
 import "./css/Pet.css";
 import OwnerPage from "./components/owners/OwnerPage";
@@ -23,6 +22,7 @@ import AdoptionAdd from "./components/adoptions/AdoptionAdd";
 import PetPage from "./components/pets/PetPage";
 import PetDetails from "./components/pets/PetDetails";
 import PetAdd from "./components/pets/PetAdd";
+import "./css/Adoption.css";
 
 function App() {
   return (

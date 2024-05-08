@@ -184,7 +184,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  /* background-color: #f5f5f5; */
   padding: 10px;
   cursor: pointer;
   border-radius: 10px;
@@ -327,7 +326,7 @@ see-pets .custom-select {
 }
 
 .custom-button-file:hover {
-  background-color: #5e1914;
+  background-color: #8a251d;
   color: #f5f5f5;
 }
 
@@ -433,4 +432,13 @@ see-pets .custom-select {
   stroke-dasharray: 100;
   stroke-dashoffset: 101;
   transition: all 250ms cubic-bezier(1, 0, 0.37, 0.91);
+}
+
+.btn-tbl {
+  margin: 0;
+  padding: 0;
+  width: 70px;
+  height: 30px;
+  font-size: 15px;
+  font-weight: 450;
 }

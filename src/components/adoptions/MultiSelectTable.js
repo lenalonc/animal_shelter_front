@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
-const TableCustom = (props) => {
+const MultiSelectTable = (props) => {
   const { selectedRow, onRowClick, data } = props;
 
   const handleRowClick = (id) => {
@@ -17,18 +18,29 @@ const TableCustom = (props) => {
             {keys.map((key) => (
               <th key={key}>{key.toUpperCase()}</th>
             ))}
+            <th></th>
           </tr>
         </thead>
         <tbody>
           {data.map((item) => (
             <tr
               key={item.id}
-              className={item.id === selectedRow ? "selected" : ""}
+              className={selectedRow.includes(item.id) ? "selected" : ""}
               onClick={() => handleRowClick(item.id)}
             >
               {keys.map((key) => (
                 <td key={key}>{item[key]}</td>
               ))}
+              <td>
+                <Link to={`/pets/${item.id}`} target="_blank">
+                  <button
+                    type="button"
+                    className="btn btn-primary btn-adopt btn-tbl"
+                  >
+                    ...
+                  </button>
+                </Link>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -37,4 +49,4 @@ const TableCustom = (props) => {
   );
 };
 
-export default TableCustom;
+export default MultiSelectTable;

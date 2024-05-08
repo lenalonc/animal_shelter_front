@@ -1,6 +1,10 @@
+.table-container {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
 .data-table {
   border-collapse: collapse;
-  width: 100%;
   width: calc(100% - 40px);
   margin: 0 auto;
   border-radius: 10px !important;
