@@ -1,38 +1,75 @@
 import TableCustom from "../owners/Table";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import api from "../../api/Api";
+import AdoptionDetailsModal from "./AdoptionDetails";
 
 const AdoptionPage = () => {
   const [selectedRow, setSelectedRow] = useState(null);
-  const [data, setData] = useState([
-    { id: 1, name: "John Doe", pet: "aaaaa" },
-    { id: 2, name: "Jane Smith", pet: "basdsaz" },
-    { id: 3, name: "Alice Johnson", pet: "cszdcv" },
-  ]);
+  const [data, setData] = useState([]);
+  const [formattedData, setFormattedData] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const getAdoptions = async () => {
+    try {
+      const response = await api.get("/adoption");
+      setData(response.data);
+      const formattedData = response.data.map((adoption) => ({
+        id: adoption.id,
+        date: adoption.date,
+        owner: `${adoption.owner.firstname} ${adoption.owner.lastname}`,
+        pets: adoption.pets.length,
+      }));
+      setFormattedData(formattedData);
+      console.log(formattedData);
+    } catch (error) {
+      console.error("Error fetching fields:", error);
+    }
+  };
+
+  useEffect(() => {
+    getAdoptions();
+  }, [data]);
 
   const handleRowClick = (id) => {
     setSelectedRow((prevSelectedRow) => (prevSelectedRow === id ? null : id));
   };
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedRow(null);
+    getAdoptions();
+  };
+
   return (
     <div className="view-all-page">
+      <h2 className="title-tbl">ADOPTIONS</h2>
       <TableCustom
         onRowClick={handleRowClick}
         selectedRow={selectedRow}
-        data={data}
+        data={formattedData}
       ></TableCustom>
+      {isModalOpen && (
+        <AdoptionDetailsModal onClose={closeModal} id={`${selectedRow}`} />
+      )}
       <div className="buttons-container">
-        <Link to={`${selectedRow}`}>
+        <button
+          type="button"
+          className="btn btn-primary btn-adopt btn-owner"
+          onClick={openModal}
+        >
+          DETAILS
+        </button>
+        <Link to={"add"}>
           <button
             type="button"
             className="btn btn-primary btn-adopt btn-owner"
             style={{ marginRight: 0 }}
           >
-            DETAILS
-          </button>
-        </Link>
-        <Link to={"add"}>
-          <button type="button" className="btn btn-primary btn-adopt btn-owner">
             ADD NEW
           </button>
         </Link>

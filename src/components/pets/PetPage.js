@@ -37,7 +37,7 @@ const PetPage = () => {
     const getPets = async () => {
       try {
         const response = await api.get("/pet");
-        let filteredPets = response.data.filter((pet) => !pet.adopted);
+        let filteredPets = response.data;
 
         if (selectedValue !== "All") {
           filteredPets = filteredPets.filter((pet) => {

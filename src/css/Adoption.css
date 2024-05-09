@@ -17,11 +17,11 @@
   margin: auto;
   padding: 10px;
   border-radius: 10px;
-  width: 80%; /* Adjust width as needed */
+  width: 80%;
   max-width: 500px;
   box-shadow: 4px 4px 8px 4px rgba(0, 0, 0, 0.3);
   background-color: rgb(232, 217, 217);
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
   max-height: 700px;
 }
 
@@ -30,8 +30,8 @@
   border-bottom: 1px solid #ddd;
   display: flex;
   flex-direction: row;
-  justify-content: space-between; /* Align close button to the right */
-  align-items: center; /* Align items vertically */
+  justify-content: space-between;
+  align-items: center;
 }
 
 .modal-header-custom h4 {
@@ -99,4 +99,49 @@
   margin-bottom: 0;
   font-size: 15px;
   text-decoration: none !important;
+}
+
+.title-tbl {
+  text-align: left;
+  margin: 10px 20px 30px 160px;
+  font-weight: 600;
+  color: #5e1914;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  font-family: "Work Sans", sans-serif;
+}
+
+.adoption-field {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  margin-bottom: 1px;
+}
+
+.label-adoption {
+  font-size: 20px;
+  color: #5e1914;
+  font-weight: 400;
+}
+
+.input-adoption {
+  margin-left: 1px;
+  margin-bottom: 5px;
+  padding: 1px;
+  font-size: 17px;
+}
+
+.adoption-field span {
+  font-size: 18px;
+  margin-bottom: 10px;
+  margin-left: 20px;
+  color: #5e1914;
+  font-weight: 500;
+}
+
+.adoption-field p {
+  font-family: "Work Sans", sans-serif;
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #5e1914;
+  font-weight: 600;
 }

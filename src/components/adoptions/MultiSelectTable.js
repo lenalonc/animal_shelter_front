@@ -10,6 +10,10 @@ const MultiSelectTable = (props) => {
 
   const keys = Object.keys(data[0] || {});
 
+  const handleButtonClick = (event) => {
+    event.stopPropagation();
+  };
+
   return (
     <div className="table-container">
       <table className="data-table rounded-3">
@@ -36,6 +40,7 @@ const MultiSelectTable = (props) => {
                   <button
                     type="button"
                     className="btn btn-primary btn-adopt btn-tbl"
+                    onClick={handleButtonClick}
                   >
                     ...
                   </button>

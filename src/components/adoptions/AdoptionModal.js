@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import api from "../../api/Api";
 import SelectBox from "../pets/SelectBox";
-import PetCard from "../pets/PetCard";
 import PetCardAd from "./PetCardAdoption";
 
-const AdoptionModal = ({ onClose, pets }) => {
+const AdoptionModal = ({ onClose, chosenPets }) => {
   const [owners, setOwners] = useState([]);
   const [formattedOwners, setFormattedOwners] = useState([]);
   const [chosenOwner, setChosenOwner] = useState(null);
@@ -25,7 +24,8 @@ const AdoptionModal = ({ onClose, pets }) => {
       }
     };
     getOwners();
-    loadPetImages(pets);
+    loadPetImages(chosenPets);
+    console.log(chosenPets);
   }, []);
 
   const loadPetImages = async (pets) => {
@@ -50,34 +50,36 @@ const AdoptionModal = ({ onClose, pets }) => {
   const handleOwnerChange = (ownerInfo) => {
     const selectedOwner = owners.find((owner) => owner.id === ownerInfo.id);
     setChosenOwner(selectedOwner);
-    console.log(selectedOwner);
   };
 
   const handleSave = () => {
     const currentDate = new Date().toISOString();
 
-    // Administrator object
-    const administrator = { id: 1 };
+    const admin = { id: 1 };
 
-    // Owner object
     const owner = chosenOwner;
 
-    // List of adoption items
-    const adoptionItems = pets.map((pet) => ({
-      adoptionItem: {
-        pet,
-      },
+    const pets = chosenPets.map((pet) => ({
+      pet,
     }));
 
-    // Adoption object
     const adoption = {
       date: currentDate,
-      administrator,
+      admin,
       owner,
-      adoptionItems,
+      pets,
     };
 
-    console.log(JSON.stringify(adoption));
+    // console.log(JSON.stringify(adoption));
+    const createAdoption = async () => {
+      try {
+        const response = await api.post("/adoption", adoption);
+        console.log(response.data);
+      } catch (error) {
+        console.error("Error fetching fields:", error);
+      }
+    };
+    createAdoption();
   };
 
   return (
@@ -103,25 +105,25 @@ const AdoptionModal = ({ onClose, pets }) => {
               onChange={handleOwnerChange}
               width={"300px"}
             />
-            {pets.length > 0 && (
+            {chosenPets.length > 0 && (
               <div className="pet-part">
-                {pets.map((pet) => (
+                {chosenPets.map((pet) => (
                   <PetCardAd key={pet.id} pet={pet} image={petImages[pet.id]} />
                 ))}
               </div>
             )}
           </div>
         </div>
-        <div className="modal-footer-custom">
-          <button type="button" className="btn btn-secondary" onClick={onClose}>
-            Close
-          </button>
+        <div
+          className="modal-footer-custom"
+          style={{ display: "flex", justifyContent: "flex-end" }}
+        >
           <button
-            type="button"
-            className="btn btn-primary"
+            className="btn btn-primary btn-adopt btn-owner-details"
             onClick={handleSave}
+            style={{ width: "120px", marginRight: 10 }}
           >
-            Confirm
+            Save
           </button>
         </div>
       </div>

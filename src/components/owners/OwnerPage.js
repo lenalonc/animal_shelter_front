@@ -57,6 +57,7 @@ const OwnerPage = () => {
 
   return (
     <div className="view-all-page">
+      <h2 className="title-tbl">OWNERS</h2>
       <TableCustom
         onRowClick={handleRowClick}
         selectedRow={selectedRow}
@@ -64,16 +65,16 @@ const OwnerPage = () => {
       />
       <div className="buttons-container">
         <Link to={`${selectedRow}`}>
+          <button type="button" className="btn btn-primary btn-adopt btn-owner">
+            DETAILS
+          </button>
+        </Link>
+        <Link to={"add"}>
           <button
             type="button"
             className="btn btn-primary btn-adopt btn-owner"
             style={{ marginRight: 0 }}
           >
-            DETAILS
-          </button>
-        </Link>
-        <Link to={"add"}>
-          <button type="button" className="btn btn-primary btn-adopt btn-owner">
             ADD NEW
           </button>
         </Link>

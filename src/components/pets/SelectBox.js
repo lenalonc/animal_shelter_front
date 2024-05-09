@@ -58,7 +58,6 @@ const SelectBox = ({ onChange, options, label, width }) => {
       onChange={handleChange}
       styles={customStyles}
       isValidNewOption={() => false}
-      // onBlur={onBlur}
     />
   );
 };

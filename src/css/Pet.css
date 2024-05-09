@@ -23,7 +23,7 @@
 
 .card-pet img {
   width: auto;
-  height: 380px;
+  height: 360px;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
@@ -54,6 +54,7 @@
   flex-direction: row;
   align-items: flex-start;
   align-self: center;
+  
   width: 100%;
   padding: 50px 70px 40px 100px;
   border-radius: 10px;
