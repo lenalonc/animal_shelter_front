@@ -6,6 +6,8 @@ import MultiSelectTable from "./MultiSelectTable";
 import { Link } from "react-router-dom";
 import AdoptionModal from "./AdoptionModal";
 
+//TODO: max 6 pets can be adopted at a time
+
 const AdoptionAdd = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [pets, setPets] = useState([]);
@@ -18,7 +20,8 @@ const AdoptionAdd = () => {
       try {
         const response = await api.get("/pet");
         setPets(response.data);
-        const filteredPets = response.data.map(
+
+        const filteredPetData = response.data.map(
           ({ id, name, animal, breed, sex }) => ({
             id,
             name: name,
@@ -27,13 +30,13 @@ const AdoptionAdd = () => {
             sex,
           })
         );
-        setFilteredData(filteredPets);
+        setFilteredData(filteredPetData);
       } catch (err) {
         console.log(`Error: ${err.message}`);
       }
     };
     getPets();
-  }, []);
+  }, [isModalOpen]);
 
   const handleRowClick = (id) => {
     if (selectedRows.includes(id)) {
@@ -51,7 +54,6 @@ const AdoptionAdd = () => {
     );
     setSelectedPets(selectedPetsData);
     setIsModalOpen(true);
-    // console.log(selectedPetsData);
   };
 
   const closeModal = () => {
@@ -60,6 +62,7 @@ const AdoptionAdd = () => {
 
   return (
     <div className="view-all-page">
+      <h2 className="title-tbl">NEW ADOPTION</h2>
       <MultiSelectTable
         onRowClick={handleRowClick}
         selectedRow={selectedRows}
@@ -69,14 +72,16 @@ const AdoptionAdd = () => {
         <button
           type="button"
           className="btn btn-primary btn-adopt btn-owner"
-          style={{ marginRight: 10 }}
           onClick={handleAdoptClick}
         >
           ADOPT
         </button>
       </div>
       {isModalOpen && (
-        <AdoptionModal onClose={closeModal} pets={selectedPets} />
+        <AdoptionModal
+          onClose={closeModal}
+          chosenPets={selectedPets.filter((pet) => pet)}
+        />
       )}
     </div>
   );
