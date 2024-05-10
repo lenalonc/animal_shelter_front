@@ -23,28 +23,37 @@ import PetPage from "./components/pets/PetPage";
 import PetDetails from "./components/pets/PetDetails";
 import PetAdd from "./components/pets/PetAdd";
 import "./css/Adoption.css";
+import AdoptionDetails from "./components/adoptions/AdoptionDetails";
+import Login from "./components/Login";
+import "./css/Login.css";
+import { UserContextProvider } from "./components/context/UserContext";
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className="Shelter">
-        <Navbar />
-        <div className="body"></div>
-        <Routes>
-          <Route path="/" element={<Main />} />
-          <Route path="owners" element={<OwnerPage />} />
-          <Route path="owners/:id" element={<OwnerDetails />} />
-          <Route path="owners/add" element={<OwnerAdd />} />
-          <Route path="adoptions" element={<AdoptionPage />} />
-          <Route path="adoptions/add" element={<AdoptionAdd />} />
-          <Route path="pets" element={<PetPage />} />
-          <Route path="pets/:id" element={<PetDetails />} />
-          <Route path="pets/add" element={<PetAdd />} />
-          <Route path="*" element={<div>404 Not Found</div>} />
-        </Routes>
-        <Footer />
-      </div>
-    </BrowserRouter>
+    <UserContextProvider>
+      <BrowserRouter>
+        <div className="Shelter">
+          <Navbar />
+          <div className="body"></div>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Login />} />
+            <Route path="/" element={<Main />} />
+            <Route path="owners" element={<OwnerPage />} />
+            <Route path="owners/:id" element={<OwnerDetails />} />
+            <Route path="owners/add" element={<OwnerAdd />} />
+            <Route path="adoptions" element={<AdoptionPage />} />
+            <Route path="adoptions/add" element={<AdoptionAdd />} />
+            <Route path="adoptions/:id" element={<AdoptionDetails />} />
+            <Route path="pets" element={<PetPage />} />
+            <Route path="pets/:id" element={<PetDetails />} />
+            <Route path="pets/add" element={<PetAdd />} />
+            <Route path="*" element={<div>404 Not Found</div>} />
+          </Routes>
+          <Footer />
+        </div>
+      </BrowserRouter>
+    </UserContextProvider>
   );
 }
 

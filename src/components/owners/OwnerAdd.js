@@ -81,7 +81,7 @@ const OwnerAdd = () => {
                 fontWeight: 600,
               }}
             >
-              BECOME A PET OWNER
+              ADD PET OWNER
             </h2>
             <form>
               {fields.map((field, index) => (
