@@ -25,8 +25,8 @@ const AdoptionAdd = () => {
           ({ id, name, animal, breed, sex }) => ({
             id,
             name: name,
-            "animal.type": animal.type,
-            "breed.name": breed.breed,
+            animal: animal.type,
+            breed: breed.breed,
             sex,
           })
         );

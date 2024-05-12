@@ -1,6 +1,14 @@
 import CreatableSelect from "react-select/creatable";
 
-const SelectBox = ({ onChange, options, label, width, preselectedOption }) => {
+const SelectBox = ({
+  onChange,
+  options,
+  label,
+  width,
+  preselectedOption,
+  placeholder,
+  onClear,
+}) => {
   const optionsReformated = options.map((op) => ({
     value: op.id,
     label: op[label],
@@ -14,6 +22,8 @@ const SelectBox = ({ onChange, options, label, width, preselectedOption }) => {
       onChange(
         newValue ? options.find((option) => option.id === newValue.value) : null
       );
+    } else {
+      if (onClear) onClear();
     }
   };
 
@@ -54,6 +64,7 @@ const SelectBox = ({ onChange, options, label, width, preselectedOption }) => {
   return (
     <CreatableSelect
       isClearable
+      placeholder={placeholder}
       options={optionsReformated}
       onChange={handleChange}
       styles={customStyles}

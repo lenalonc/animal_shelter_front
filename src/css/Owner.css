@@ -1,15 +1,28 @@
 .table-container {
   max-height: 400px;
   overflow-y: auto;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 20px;
 }
 
 .data-table {
   border-collapse: collapse;
-  width: calc(100% - 300px);
-  margin: 0 auto;
+  width: calc(100% - 600px);
+  margin: 0 auto auto;
   border-radius: 10px !important;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   background-color: rgb(232, 217, 217);
+  align-self: center;
+}
+
+.search-bar-table {
+  display: flex;
+  flex-direction: row;
+  justify-content: baseline;
+  align-items: center;
 }
 
 .data-table th,
@@ -46,6 +59,15 @@
   background-color: rgb(218, 201, 201);
 }
 
+.title-tbl {
+  text-align: left;
+  margin: 10px 20px 30px 320px;
+  font-weight: 600;
+  color: #5e1914;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  font-family: "Work Sans", sans-serif;
+}
+
 .view-all-page {
   padding: 20px;
   min-height: 80vh;
@@ -59,7 +81,7 @@
 }
 
 .btn-owner {
-  margin: 0 130px 0 40px;
+  margin: 0 300px 0 40px;
   padding: 0;
   width: 150px;
   height: 45px;

@@ -8,7 +8,7 @@ export const UserContextProvider = ({ children }) => {
     firstname: "",
     lastname: "",
     email: "",
-    role: "customer",
+    role: "admin",
     token: "",
   };
 
