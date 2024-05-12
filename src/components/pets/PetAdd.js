@@ -61,7 +61,6 @@ const PetAdd = () => {
     const value =
       e.target.type === "checkbox" ? e.target.checked : e.target.value;
     setFormData({ ...formData, [e.target.name]: value });
-    console.log(formData);
   };
 
   const handleSubmit = (e) => {
@@ -81,7 +80,6 @@ const PetAdd = () => {
 
   useEffect(() => {
     if (picture && id) {
-      console.log(id);
       savePictureLocally(picture);
     }
   }, [id]);
@@ -405,7 +403,7 @@ const PetAdd = () => {
                   style={{ display: "none" }} // hide the default file input
                 />
                 <label htmlFor="picture" className="custom-button-file">
-                  Choose File
+                  Choose image
                 </label>
               </div>
             </div>

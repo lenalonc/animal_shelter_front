@@ -4,7 +4,7 @@ import PetCard from "./PetCard";
 import SelectionBox from "./SelectionPetPage";
 import { useLocation, useNavigate } from "react-router-dom";
 
-const PetPage = () => {
+const PetsAdopted = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -35,8 +35,9 @@ const PetPage = () => {
   useEffect(() => {
     const getPets = async () => {
       try {
-        const response = await api.get("/pet");
+        const response = await api.get("/pet/adopted");
         let filteredPets = response.data;
+        console.log("a", response.data);
 
         if (selectedValue !== "All") {
           filteredPets = filteredPets.filter((pet) => {
@@ -87,11 +88,16 @@ const PetPage = () => {
       </div>
       <div className="pet-page">
         {pets.map((pet) => (
-          <PetCard key={pet.id} pet={pet} image={petImages[pet.id]} />
+          <PetCard
+            key={pet.id}
+            pet={pet}
+            image={petImages[pet.id]}
+            page={""}
+          />
         ))}
       </div>
     </div>
   );
 };
 
-export default PetPage;
+export default PetsAdopted;

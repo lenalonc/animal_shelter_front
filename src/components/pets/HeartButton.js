@@ -1,12 +1,20 @@
 import mojs from "@mojs/core";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { UserContext } from "../context/UserContext";
+
+//TODO: handle that when a user thats not logged clicks heart it opens a pop up asking to login for liking pets
 
 const HeartButton = () => {
   const [isActive, setIsActive] = useState(false);
+  const { user } = useContext(UserContext);
 
   const handleClick = () => {
-    setIsActive(!isActive);
-    playAnimation();
+    if (user.role === "customer") {
+      setIsActive(!isActive);
+      playAnimation();
+    } else {
+      //handleElse
+    }
   };
 
   const playAnimation = () => {

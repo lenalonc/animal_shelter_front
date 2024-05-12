@@ -1,14 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const PetCard = ({ pet, image }) => {
+const PetCard = ({ pet, image, page }) => {
   const altText = image ? `Image of ${pet.name}` : "No picture";
 
+  let linkTo = `${pet.id}`;
+  if (page) {
+    linkTo = `${page}/${pet.id}`;
+  }
+
   return (
-    <Link
-      to={`${pet.id}`}
-      style={{ textDecoration: "none" }}
-    >
+    <Link to={linkTo} style={{ textDecoration: "none" }}>
       <div className="card card-pet" style={{ width: "18rem" }}>
         <img
           src={image || "placeholder.png"}

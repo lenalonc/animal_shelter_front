@@ -87,11 +87,7 @@ const OwnerDetails = () => {
         </div>
         <div className="owner-details-content">
           {Object.keys(owner).map((key) => {
-            if (
-              key !== "dateOfBirth" &&
-              key !== "adoptions" &&
-              key !== "password"
-            ) {
+            if (key !== "adoptions" && key !== "password") {
               return (
                 <div className="field-owner-details" key={key}>
                   <label>{capitalizeFirstLetter(key)}:</label>
@@ -105,39 +101,34 @@ const OwnerDetails = () => {
                     onFocus={handleInputFocus}
                     onBlur={handleInputBlur}
                     disabled={!isEditing || key === "id"}
+                    style={
+                      key === "id"
+                        ? {
+                            width: 20,
+                            border: "none",
+                            background: "none",
+                            color: "#450c08",
+                            fontSize: 18,
+                            fontWeight: 500,
+                          }
+                        : { width: 300, marginLeft: 10 }
+                    }
                   />
                 </div>
               );
             }
             return null;
           })}
-          <div className="field-owner-details">
-            <label>Date of Birth:</label>
-            <input
-              type="date"
-              name="dateOfBirth"
-              value={owner.dateOfBirth || ""}
-              onChange={isEditing ? handleInputChange : null}
-              onFocus={handleInputFocus}
-              onBlur={handleInputBlur}
-              disabled={!isEditing}
-            />
-          </div>
+
           <div className="buttons-owner-details">
             {isEditing ? (
               <>
                 <button
                   className="btn btn-primary btn-adopt btn-owner-details"
-                  style={{ marginRight: 200 }}
+                  style={{ marginRight: 200, marginLeft: 0 }}
                   onClick={() => setIsEditing(false)}
                 >
                   Cancel
-                </button>
-                <button
-                  className="btn btn-primary btn-adopt btn-owner-details"
-                  style={{ marginLeft: "auto", marginRight: 20 }}
-                >
-                  Adoptions
                 </button>
                 <button
                   className="btn btn-primary btn-adopt btn-owner-details"

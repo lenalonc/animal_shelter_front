@@ -54,7 +54,7 @@
   flex-direction: row;
   align-items: flex-start;
   align-self: center;
-  
+
   width: 100%;
   padding: 50px 70px 40px 100px;
   border-radius: 10px;
@@ -442,4 +442,25 @@ see-pets .custom-select {
   height: 30px;
   font-size: 15px;
   font-weight: 450;
+}
+
+/* Pet details modal */
+.pet-input-details {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.age {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-around;
+}
+
+.pet-size {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
 }

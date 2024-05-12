@@ -10,24 +10,37 @@ const BreedSelectBox = ({
   width,
   disabled,
   selectedAnimalType,
+  preselectedOption,
 }) => {
   const [optionsReformated, setOptionsReformated] = useState([]);
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState(preselectedOption);
 
   useEffect(() => {
-    const formatOptions = () => {
-      if (!disabled && selectedAnimalType) {
-        setSelectedOption(null);
-        fetchBreeds(selectedAnimalType);
-      } else {
-        setOptionsReformated([]);
-        setSelectedOption(null);
-        onChange(null);
-      }
-    };
-
-    formatOptions();
+    setTimeout(() => {
+      const formatOptions = () => {
+        if (!disabled && selectedAnimalType && !preselectedOption) {
+          setSelectedOption(null);
+          fetchBreeds(selectedAnimalType);
+        } else if (preselectedOption) {
+          fetchBreeds(selectedAnimalType);
+        } else {
+          setOptionsReformated([]);
+          setSelectedOption(null);
+          onChange(null);
+        }
+      };
+      formatOptions();
+    }, 1000);
   }, [disabled, selectedAnimalType]);
+
+  useEffect(() => {
+    if (preselectedOption) {
+      setSelectedOption({
+        value: preselectedOption.id,
+        label: preselectedOption[label],
+      });
+    }
+  }, [optionsReformated]);
 
   const fetchBreeds = async (animalType) => {
     try {

@@ -84,19 +84,23 @@ const Main = () => {
             lives of our shelter animals.
           </p>
           <div className="d-inline-flex gap-2 mb-5">
-            <button
-              className="d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill btn-login"
-              type="button"
-            >
-              Login
-              <Icon className="bi ms-2" width="24" height="24" />
-            </button>
-            <button
-              className="btn btn-outline-secondary btn-lg px-4 rounded-pill btn-register"
-              type="button"
-            >
-              Register
-            </button>
+            <Link to={"/login"}>
+              <button
+                className="d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill btn-login"
+                type="button"
+              >
+                Login
+                <Icon className="bi ms-2" width="24" height="24" />
+              </button>
+            </Link>
+            <Link to={"/login"}>
+              <button
+                className="btn btn-outline-secondary btn-lg px-4 rounded-pill btn-register"
+                type="button"
+              >
+                Register
+              </button>
+            </Link>
           </div>
         </div>
       </div>

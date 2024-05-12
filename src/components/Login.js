@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import { UserContext } from "./context/UserContext";
 
 const LoginForm = () => {
-  const { user, setUser, saveUserToLocalStorage } = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
 
   const [loginData, setLoginData] = useState({
     username: "",

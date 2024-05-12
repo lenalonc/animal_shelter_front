@@ -1,6 +1,6 @@
 import CreatableSelect from "react-select/creatable";
 
-const SelectBox = ({ onChange, options, label, width }) => {
+const SelectBox = ({ onChange, options, label, width, preselectedOption }) => {
   const optionsReformated = options.map((op) => ({
     value: op.id,
     label: op[label],
@@ -58,6 +58,11 @@ const SelectBox = ({ onChange, options, label, width }) => {
       onChange={handleChange}
       styles={customStyles}
       isValidNewOption={() => false}
+      defaultValue={
+        preselectedOption
+          ? { value: preselectedOption.id, label: preselectedOption[label] }
+          : null
+      }
     />
   );
 };

@@ -26,7 +26,9 @@ import "./css/Adoption.css";
 import AdoptionDetails from "./components/adoptions/AdoptionDetails";
 import Login from "./components/Login";
 import "./css/Login.css";
+import PetsAdopted from "./components/pets/PetsAdopted";
 import { UserContextProvider } from "./components/context/UserContext";
+import PetAdoptedDetails from "./components/pets/AdoptedPetDetails";
 
 function App() {
   return (
@@ -48,6 +50,8 @@ function App() {
             <Route path="pets" element={<PetPage />} />
             <Route path="pets/:id" element={<PetDetails />} />
             <Route path="pets/add" element={<PetAdd />} />
+            <Route path="pets/adopted" element={<PetsAdopted />} />
+            <Route path={"pets/adopted/:id"} element={<PetAdoptedDetails />} />
             <Route path="*" element={<div>404 Not Found</div>} />
           </Routes>
           <Footer />

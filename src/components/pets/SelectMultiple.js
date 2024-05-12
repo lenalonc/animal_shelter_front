@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CreatableSelect from "react-select/creatable";
 
-const SelectMultiple = ({ onChange }) => {
+const SelectMultiple = ({ onChange, preselectedOptions }) => {
+  const [selectedOptions, setSelectedOptions] = useState([]);
+
   const customStyles = {
     option: (provided, state) => ({
       ...provided,
@@ -46,13 +48,29 @@ const SelectMultiple = ({ onChange }) => {
     { value: "white", label: "White" },
   ];
 
+  useEffect(() => {
+    if (preselectedOptions) {
+      const parsedOptions = preselectedOptions.split(" ").map((color) => ({
+        value: color,
+        label: color.charAt(0).toUpperCase() + color.slice(1),
+      }));
+      setSelectedOptions(parsedOptions);
+    }
+  }, [preselectedOptions]);
+
+  const handleChange = (newValue) => {
+    setSelectedOptions(newValue || []);
+    onChange(newValue || []);
+  };
+
   return (
     <CreatableSelect
       isMulti
       options={basicColors}
       styles={customStyles}
       isValidNewOption={() => false}
-      onChange={onChange}
+      onChange={handleChange}
+      value={selectedOptions}
     />
   );
 };

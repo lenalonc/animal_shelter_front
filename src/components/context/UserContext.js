@@ -5,11 +5,11 @@ export const UserContext = createContext(null);
 export const UserContextProvider = ({ children }) => {
   const initialUserState = {
     id: null,
-    firstname: '',
-    lastname: '',
-    email: '',
-    role: '',
-    token: ''
+    firstname: "",
+    lastname: "",
+    email: "",
+    role: "customer",
+    token: "",
   };
 
   const [user, setUser] = useState(initialUserState);
@@ -17,7 +17,7 @@ export const UserContextProvider = ({ children }) => {
 
   const resetUser = () => {
     setUser(initialUserState);
-    localStorage.removeItem('user');
+    localStorage.removeItem("user");
   };
 
   const saveUserToLocalStorage = (userData) => {
@@ -25,12 +25,12 @@ export const UserContextProvider = ({ children }) => {
       ...userData,
       timestamp: Date.now(),
     };
-    localStorage.setItem('user', JSON.stringify(userWithTimestamp));
+    localStorage.setItem("user", JSON.stringify(userWithTimestamp));
     setLogoutTimeout(60 * 60 * 1000);
   };
 
   useEffect(() => {
-    const storedUserData = localStorage.getItem('user');
+    const storedUserData = localStorage.getItem("user");
 
     if (storedUserData) {
       const parsedData = JSON.parse(storedUserData);
@@ -42,7 +42,7 @@ export const UserContextProvider = ({ children }) => {
         setUser(userData);
         setLogoutTimeout(60 * 60 * 1000 - timePassed);
       } else {
-        localStorage.removeItem('user');
+        localStorage.removeItem("user");
         resetUser();
       }
     }

@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
+import { UserContext } from "./context/UserContext";
 
 const Navbar = () => {
+  const { user } = useContext(UserContext);
+
   return (
     <div className="bd-example m-0 border-0 ">
       <nav
@@ -43,78 +46,95 @@ const Navbar = () => {
                   About us
                 </a>
               </li>
+
               <li className="nav-item dropdown">
-                <NavLink
-                  className="nav-link dropdown-toggle nav-text"
-                  to={"pets?type=All"}
-                >
+                <NavLink className="nav-link  nav-text" to={"pets?type=All"}>
                   Pets
                 </NavLink>
-                <ul className="dropdown-menu">
-                  <li>
-                    <NavLink
-                      className="dropdown-item nav-drop"
-                      to={"pets?type=All"}
-                    >
-                      View All
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink className="dropdown-item nav-drop" to={"pets/add"}>
-                      Add
-                    </NavLink>
-                  </li>
-                </ul>
+                {user.role === "admin" && (
+                  <ul className="dropdown-menu">
+                    <li>
+                      <NavLink
+                        className="dropdown-item nav-drop"
+                        to={"pets?type=All"}
+                      >
+                        View pets
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        className="dropdown-item nav-drop"
+                        to={"pets/add"}
+                      >
+                        Add
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        className="dropdown-item nav-drop"
+                        to={"pets/adopted?type=All"}
+                      >
+                        Adopted Pets
+                      </NavLink>
+                    </li>
+                  </ul>
+                )}
               </li>
-              <li className="nav-item dropdown">
-                <NavLink
-                  className="nav-link dropdown-toggle nav-text"
-                  to={"/owners"}
-                >
-                  Owners
-                </NavLink>
-                <ul className="dropdown-menu">
-                  <li>
-                    <NavLink className="dropdown-item nav-drop" to={"/owners"}>
-                      View All
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      className="dropdown-item nav-drop"
-                      to={"/owners/add"}
-                    >
-                      Add
-                    </NavLink>
-                  </li>
-                </ul>
-              </li>
-              <li className="nav-item dropdown">
-                <NavLink
-                  className="nav-link dropdown-toggle nav-text"
-                  to={"adoptions"}
-                >
-                  Adoptions
-                </NavLink>
-                <ul className="dropdown-menu">
-                  <li>
-                    <NavLink
-                      className="dropdown-item nav-drop"
-                      to={"adoptions"}
-                    >
-                      View All
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      className="dropdown-item nav-drop"
-                      to={"adoptions/add"}
-                    >
-                      Add
-                    </NavLink>
-                  </li>
-                </ul>
-              </li>
+
+              {user.role === "admin" && (
+                <li className="nav-item dropdown">
+                  <NavLink className="nav-link nav-text" to={"/owners"}>
+                    Owners
+                  </NavLink>
+                  <ul className="dropdown-menu">
+                    <li>
+                      <NavLink
+                        className="dropdown-item nav-drop"
+                        to={"/owners"}
+                      >
+                        View All
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        className="dropdown-item nav-drop"
+                        to={"/owners/add"}
+                      >
+                        Add
+                      </NavLink>
+                    </li>
+                  </ul>
+                </li>
+              )}
+
+              {(user.role === "admin" || user.role === "customer") && (
+                <li className="nav-item dropdown">
+                  <NavLink
+                    className="nav-link dropdown-toggle nav-text"
+                    to={"adoptions"}
+                  >
+                    Adoptions
+                  </NavLink>
+                  <ul className="dropdown-menu">
+                    <li>
+                      <NavLink
+                        className="dropdown-item nav-drop"
+                        to={"adoptions"}
+                      >
+                        View All
+                      </NavLink>
+                    </li>
+                    <li>
+                      <NavLink
+                        className="dropdown-item nav-drop"
+                        to={"adoptions/add"}
+                      >
+                        Add
+                      </NavLink>
+                    </li>
+                  </ul>
+                </li>
+              )}
             </ul>
           </div>
         </div>

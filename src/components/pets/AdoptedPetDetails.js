@@ -5,22 +5,17 @@ import HeartButton from "./HeartButton";
 import { UserContext } from "../context/UserContext";
 import EditPetModal from "./EditPetModal";
 
-const PetDetails = () => {
+const PetAdoptedDetails = () => {
   const { id } = useParams();
   const [pet, setPet] = useState(null);
   const [petImage, setPetImage] = useState(null);
-  const { user } = useContext(UserContext);
-  const [modalOpen, setModalOpen] = useState(false);
-  const [deleted, setDeleted] = useState(false);
 
   useEffect(() => {
     const getPetDetails = async () => {
       try {
-        if (!deleted) {
-          const response = await api.get(`/pet/${id}`);
-          setPet(response.data);
-          loadPetImage(response.data);
-        }
+        const response = await api.get(`/pet/${id}`);
+        setPet(response.data);
+        loadPetImage(response.data);
       } catch (err) {
         console.error("Error fetching pet details:", err);
       }
@@ -77,14 +72,6 @@ const PetDetails = () => {
     }
   };
 
-  const openEditModal = () => {
-    setModalOpen(true);
-  };
-
-  const closeEditModal = () => {
-    setModalOpen(false);
-  };
-
   return (
     <div className="pet-details">
       <div className="container-pet-details">
@@ -122,24 +109,10 @@ const PetDetails = () => {
               <span>Vaccinated:</span> {vaccinated ? "Yes" : "No"}
             </p>
           </div>
-          {user.role === "admin" ? (
-            <button
-              className="btn btn-primary btn-adopt btn-owner"
-              style={{ marginRight: 0 }}
-              onClick={setModalOpen}
-            >
-              EDIT
-            </button>
-          ) : (
-            <HeartButton />
-          )}
         </div>
       </div>
-      {modalOpen && (
-        <EditPetModal onClose={closeEditModal} pet={pet} setDeleted={setDeleted} />
-      )}
     </div>
   );
 };
 
-export default PetDetails;
+export default PetAdoptedDetails;

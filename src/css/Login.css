@@ -46,7 +46,7 @@
   justify-content: center;
   display: flex;
   margin: 20px auto;
-  padding: 8px;
+  padding: 15px;
   border: 1px solid rgb(213, 198, 198);
   border-radius: 5px;
 }
@@ -129,6 +129,15 @@
 
 .input-custom::placeholder {
   color: #a4868399;
+}
+
+.input-custom:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 100px rgb(232, 217, 217) inset;
+}
+
+.input-custom-signup:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 100px rgb(232, 217, 217) inset,
+    0 0 10px 1px rgba(0, 0, 0, 0.1);
 }
 
 .login {

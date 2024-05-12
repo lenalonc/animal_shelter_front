@@ -34,7 +34,7 @@
   align-items: center;
 }
 
-.modal-header-custom h4 {
+.modal-header-custom {
   color: #5e1914;
   font-weight: 500;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);

@@ -38,18 +38,14 @@
   color: white !important;
 }
 
-.navbar-nav .nav-item .nav-link.active,
-.navbar-nav .nav-item .nav-link.active:focus,
-.navbar-nav .nav-item .nav-link.active:hover {
-  color: #ffffff !important;
+.nav-text.active:focus {
+  color: #5e1914 !important;
+  font-weight: 700;
 }
 
-.navbar-nav .nav-item .nav-link.active,
-.navbar-nav .nav-item .nav-link.active:focus,
-.navbar-nav .nav-item .nav-link.active:hover {
-  color: inherit !important;
-  background-color: transparent !important;
-  text-decoration: none !important;
+.nav-text.active {
+  color: #5e1914 !important;
+  font-weight: 700;
 }
 
 .dropdown-menu {
@@ -62,7 +58,10 @@
 }
 
 .nav-item.dropdown:hover .dropdown-menu {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
 }
 
 .dropdown-menu .dropdown-item {
@@ -75,7 +74,6 @@
 
 .dropdown-menu .dropdown-item.active,
 .dropdown-menu .dropdown-item:focus {
-  color: white !important;
   background-color: #5e1914 !important;
 }
 
