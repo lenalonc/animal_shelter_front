@@ -100,7 +100,7 @@ const MultiSelectTable = ({ selectedRow, onRowClick, data }) => {
         </div>
         <input
           style={{
-            margin: "0 300px 10px 20px",
+            margin: "0 304px 10px 20px",
             width: 150,
             height: 35,
             borderRadius: 5,

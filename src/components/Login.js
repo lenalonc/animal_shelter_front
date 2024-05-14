@@ -1,9 +1,22 @@
 import api from "../api/Api";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "./context/UserContext";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 const LoginForm = () => {
-  const { setUser } = useContext(UserContext);
+  const { user, setUser, saveUserToLocalStorage } = useContext(UserContext);
+  const { state } = useLocation();
+  const checked = state ? state.checked : false;
+  const [isChecked, setIsChecked] = useState(checked);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const toggleCheckbox = () => {
+    setIsChecked(!isChecked);
+  };
 
   const [loginData, setLoginData] = useState({
     username: "",
@@ -34,7 +47,19 @@ const LoginForm = () => {
     const login = async () => {
       try {
         const response = await api.post("/login", loginData);
-        setUser(response.data);
+        const userData = {
+          id: response.data.user.id,
+          firstname: response.data.user.firstname,
+          lastname: response.data.user.lastname,
+          email: response.data.user.email,
+          username: response.data.user.username,
+          role: response.data.user.role,
+          token: response.data.token,
+        };
+        setUser(userData);
+        saveUserToLocalStorage(userData);
+        console.log(userData);
+        navigate("/");
       } catch (err) {
         console.log(`Error: ${err.message}`);
       }
@@ -46,8 +71,21 @@ const LoginForm = () => {
     e.preventDefault();
     const register = async () => {
       try {
+        console.log(signupData);
         const response = await api.post("/register", signupData);
-        setUser(response.data);
+        const userData = {
+          id: response.data.user.id,
+          firstname: response.data.user.firstname,
+          lastname: response.data.user.lastname,
+          email: response.data.user.email,
+          username: response.data.user.username,
+          role: response.data.user.role,
+          token: response.data.token,
+        };
+        setUser(userData);
+        saveUserToLocalStorage(userData);
+        console.log(userData);
+        navigate("/");
       } catch (err) {
         console.log(`Error: ${err.message}`);
       }
@@ -58,7 +96,13 @@ const LoginForm = () => {
   return (
     <div className="login-form">
       <div className="main-login">
-        <input type="checkbox" id="chk" aria-hidden="true" />
+        <input
+          type="checkbox"
+          id="chk"
+          aria-hidden="true"
+          checked={isChecked}
+          onChange={toggleCheckbox}
+        />
         <div className="signup">
           <form>
             <label htmlFor="chk" aria-hidden="true">
@@ -90,7 +134,7 @@ const LoginForm = () => {
             />
             <input
               type="text"
-              name="txt"
+              name="username"
               placeholder="Username"
               required
               className="input-custom"

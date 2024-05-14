@@ -84,7 +84,7 @@ const Main = () => {
             lives of our shelter animals.
           </p>
           <div className="d-inline-flex gap-2 mb-5">
-            <Link to={"/login"}>
+            <Link to={"/login"} state={{checked: true}}>
               <button
                 className="d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill btn-login"
                 type="button"
@@ -93,7 +93,7 @@ const Main = () => {
                 <Icon className="bi ms-2" width="24" height="24" />
               </button>
             </Link>
-            <Link to={"/login"}>
+            <Link to={"/login"} state={{checked: false}}>
               <button
                 className="btn btn-outline-secondary btn-lg px-4 rounded-pill btn-register"
                 type="button"

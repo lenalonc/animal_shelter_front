@@ -25,7 +25,7 @@ const TableCustom = ({ selectedRow, onRowClick, data }) => {
     <div className="table-container">
       <input
         style={{
-          margin: "0 300px 10px 100px",
+          margin: "0 304px 10px 100px",
           width: 150,
           height: 30,
           borderRadius: 5,

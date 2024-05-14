@@ -8,7 +8,7 @@ export const UserContextProvider = ({ children }) => {
     firstname: "",
     lastname: "",
     email: "",
-    role: "admin",
+    role: "",
     token: "",
   };
 
@@ -66,7 +66,9 @@ export const UserContextProvider = ({ children }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser, resetUser }}>
+    <UserContext.Provider
+      value={{ user, setUser, resetUser, saveUserToLocalStorage }}
+    >
       {children}
     </UserContext.Provider>
   );

@@ -121,7 +121,7 @@ const AdoptionModal = ({ onClose, chosenPets }) => {
           <button
             className="btn btn-primary btn-adopt btn-owner-details"
             onClick={handleSave}
-            style={{ width: "120px", marginRight: 10 }}
+            style={{ width: "120px", marginRight: 10, marginBottom: 10 }}
           >
             Save
           </button>
