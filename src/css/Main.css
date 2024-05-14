@@ -250,6 +250,16 @@
   border-color: #5e1914 !important;
 }
 
+.btn-register {
+  border: 2px solid #8a251d;
+  color: #8a251d;
+}
+
+.btn-register:hover {
+  background-color: #8a251d;
+  border-color: #8a251d;
+}
+
 .container-ann {
   background-color: #ebe9e9 !important;
 }
