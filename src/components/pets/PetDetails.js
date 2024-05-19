@@ -12,37 +12,38 @@ const PetDetails = () => {
   const { user } = useContext(UserContext);
   const [modalOpen, setModalOpen] = useState(false);
   const [deleted, setDeleted] = useState(false);
+  const [heart, setHeart] = useState(false);
 
   useEffect(() => {
-    const getPetDetails = async () => {
-      try {
-        if (!deleted) {
-          const response = await api.get(`/pet/${id}`);
-          setPet(response.data);
-          loadPetImage(response.data);
-        }
-      } catch (err) {
-        console.error("Error fetching pet details:", err);
-      }
-    };
-
-    const loadPetImage = async (petData) => {
-      try {
-        const img = await import(`../../img/pets/pet${petData.id}.jpg`);
-        setPetImage(img.default);
-      } catch (err) {
-        if (petData.animal && petData.animal.type === "CAT") {
-          const img = await import("../../img/pets/placeholderCat.jpg");
-          setPetImage(img.default);
-        } else {
-          const img = await import("../../img/pets/placeholderDog.jpg");
-          setPetImage(img.default);
-        }
-      }
-    };
-
     getPetDetails();
-  }, [id, pet]);
+  }, [id]);
+
+  const loadPetImage = async (petData) => {
+    try {
+      const img = await import(`../../img/pets/pet${petData.id}.jpg`);
+      setPetImage(img.default);
+    } catch (err) {
+      if (petData.animal && petData.animal.type === "CAT") {
+        const img = await import("../../img/pets/placeholderCat.jpg");
+        setPetImage(img.default);
+      } else {
+        const img = await import("../../img/pets/placeholderDog.jpg");
+        setPetImage(img.default);
+      }
+    }
+  };
+
+  const getPetDetails = async () => {
+    try {
+      if (!deleted) {
+        const response = await api.get(`/pet/${id}`);
+        setPet(response.data);
+        loadPetImage(response.data);
+      }
+    } catch (err) {
+      console.error("Error fetching pet details:", err);
+    }
+  };
 
   if (!pet) {
     return <div>Loading...</div>;
@@ -83,6 +84,35 @@ const PetDetails = () => {
 
   const closeEditModal = () => {
     setModalOpen(false);
+  };
+
+  const likePet = async () => {
+    try {
+      const likedPet = {
+        owner: user,
+        pet: pet,
+      };
+
+      if (!deleted) {
+        const response = await api.post("/owner/like", likedPet);
+        console.log(response.data);
+        console.log(2);
+        // console.log(JSON.stringify(likedPet));
+      }
+    } catch (err) {
+      console.error("Error fetching pet details:", err);
+    }
+  };
+
+  const unlikePet = async () => {
+    try {
+      if (!deleted) {
+        const response = await api.delete(`/owner/${user.id}/unlike/${pet.id}`);
+        console.log(response.data);
+      }
+    } catch (err) {
+      console.error("Error fetching pet details:", err);
+    }
   };
 
   return (
@@ -131,12 +161,17 @@ const PetDetails = () => {
               EDIT
             </button>
           ) : (
-            <HeartButton />
+            <HeartButton like={likePet} unlike={unlikePet} pet={pet} />
           )}
         </div>
       </div>
       {modalOpen && (
-        <EditPetModal onClose={closeEditModal} pet={pet} setDeleted={setDeleted} />
+        <EditPetModal
+          onClose={closeEditModal}
+          pet={pet}
+          setDeleted={setDeleted}
+          refresh={getPetDetails}
+        />
       )}
     </div>
   );

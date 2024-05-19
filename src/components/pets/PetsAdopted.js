@@ -92,7 +92,7 @@ const PetsAdopted = () => {
             key={pet.id}
             pet={pet}
             image={petImages[pet.id]}
-            page={""}
+            page={"/pets/adopted"}
           />
         ))}
       </div>

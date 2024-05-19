@@ -1,19 +1,54 @@
 import mojs from "@mojs/core";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/UserContext";
+import api from "../../api/Api";
+import { CPopover, CButton } from "@coreui/react";
+import { Link } from "react-router-dom";
 
 //TODO: handle that when a user thats not logged clicks heart it opens a pop up asking to login for liking pets
 
-const HeartButton = () => {
+const HeartButton = ({ like, unlike, pet }) => {
   const [isActive, setIsActive] = useState(false);
   const { user } = useContext(UserContext);
+  const [showLoginPopup, setShowLoginPopup] = useState(false);
 
-  const handleClick = () => {
+  useEffect(() => {
+    const handleHeart = async () => {
+      try {
+        if (user.id) {
+          const response = await api.get(`/owner/${user.id}/pet/${pet.id}`);
+          //check if the user liked this pet
+          if (response.data) {
+            handleClick(true);
+            //if he did set it to liked on the first render, by sending the flag that its already in db
+          }
+        } else {
+          setShowLoginPopup(true);
+        }
+      } catch (err) {
+        console.error("Error fetching pet details:", err);
+      }
+    };
+    handleHeart();
+  }, []);
+
+  const handleClick = (isLiked) => {
     if (user.role === "customer") {
       setIsActive(!isActive);
       playAnimation();
+      if (isActive) {
+        // unlike
+        unlike();
+      } else {
+        //like
+        if (!isLiked) {
+          like();
+          //the pet isnt liked and is eing written into the db
+        }
+        //if it is liked no changes for db
+      }
     } else {
-      //handleElse
+      //when user is not loggedin
     }
   };
 
@@ -68,12 +103,61 @@ const HeartButton = () => {
     timeline.play();
   };
 
+  const customPopoverStyle = {
+    "--cui-popover-max-width": "1000px",
+    "--cui-popover-border-color": "red",
+    "--cui-popover-header-bg": "var(--cui-primary)",
+    "--cui-popover-header-color": "var(--cui-white)",
+    "--cui-popover-body-padding-x": "1rem",
+    "--cui-popover-body-padding-y": ".5rem",
+  };
+
   return (
-    <div
-      id="heart"
-      className={`button ${isActive ? "active" : ""}`}
-      onClick={handleClick}
-    ></div>
+    <div>
+      {showLoginPopup && (
+        <CPopover
+          content={
+            <div>
+              <Link
+                className="pop-link"
+                to={"/login"}
+                state={{ checked: true }}
+              >
+                <strong>Login</strong>
+              </Link>{" "}
+              or{" "}
+              <Link
+                className="pop-link"
+                to={"/login"}
+                state={{ checked: false }}
+              >
+                <strong>sign up</strong>{" "}
+              </Link>
+              to like a pet
+            </div>
+          }
+          placement="right"
+          title=""
+        >
+          <div
+            id="heart"
+            className={`button ${isActive ? "active" : ""}`}
+            onClick={() => handleClick(false)}
+          >
+            {" "}
+            {console.log("a")}
+          </div>
+        </CPopover>
+      )}
+
+      {!showLoginPopup && (
+        <CButton
+          id="heart"
+          className={`button ${isActive ? "active" : ""}`}
+          onClick={() => handleClick(false)}
+        ></CButton>
+      )}
+    </div>
   );
 };
 

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const PetCard = ({ pet, image, page }) => {
   const altText = image ? `Image of ${pet.name}` : "No picture";
 
-  let linkTo = `${pet.id}`;
+  let linkTo = `/pets/${pet.id}`;
   if (page) {
     linkTo = `${page}/${pet.id}`;
   }

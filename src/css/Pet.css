@@ -464,3 +464,76 @@ see-pets .custom-select {
   flex-direction: row;
   align-items: baseline;
 }
+
+/* Liked pets page */
+
+.no-liked-pets {
+  background-image: url("../img/poz-01.jpg");
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-no-liked {
+  width: 400px;
+  height: 200px;
+  z-index: 10;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  background-color: rgb(232, 217, 217);
+  margin-bottom: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #5e1914;
+  text-align: center;
+}
+
+.modal-no-liked p {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+/* ALERT */
+
+.btn:first-child:active {
+  border-color: transparent;
+}
+
+.btn.active {
+  border-color: transparent;
+}
+
+.popover {
+  --bs-popover-bg: #f5f5f5;
+  border: none;
+  box-shadow: 0px 0px 8px rgba(40, 7, 7, 0.25);
+  color: rgb(232, 217, 217);
+}
+
+.popover-body {
+  --bs-popover-bg: rgba(255, 233, 233, 0.9);
+  color: #5e1914;
+  font-weight: 400;
+  font-size: 16px;
+}
+
+.popover-header {
+  background: #5e19147b;
+  font-size: 18px !important;
+  font-weight: 500;
+  font-family: "Work Sans", sans-serif;
+}
+
+.pop-link:hover {
+  outline: none;
+  font-size: 1.15em;
+}
+
+.pop-link {
+  text-decoration: none;
+  color: #5e1914;
+  transition: font-size 0.3s;
+}

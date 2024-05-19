@@ -5,7 +5,7 @@ import SelectBox from "./SelectBox";
 import api from "../../api/Api";
 import { useNavigate } from "react-router-dom";
 
-const EditPetModal = ({ onClose, pet, setDeleted }) => {
+const EditPetModal = ({ onClose, pet, setDeleted, refresh }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState(pet);
   const [breeds, setBreeds] = useState([]);
@@ -42,7 +42,7 @@ const EditPetModal = ({ onClose, pet, setDeleted }) => {
         if (picture) {
           savePictureLocally(picture);
         }
-        console.log(response.data);
+        refresh();
       } catch (error) {
         console.error("Error fetching fields:", error);
       }
