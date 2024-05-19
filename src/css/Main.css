@@ -263,3 +263,11 @@
 .container-ann {
   background-color: #ebe9e9 !important;
 }
+
+.admin-nav {
+  margin-left: 820px;
+}
+
+.customer-nav {
+  margin-left: 890px;
+}

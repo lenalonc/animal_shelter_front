@@ -26,8 +26,15 @@ const MultiSelectTable = ({ selectedRow, onRowClick, data }) => {
 
   const filteredData = data.filter((d) => {
     // Filter by search query
+
     const searchMatch = keys.some((key) => {
+      // Skip the fields 'gender' and 'animal'
+      if (key === "sex" || key === "animal") {
+        return false;
+      }
+
       const value = d[key];
+
       if (typeof value === "string") {
         return value.toLowerCase().includes(searchQuery.toLowerCase());
       }
@@ -63,7 +70,6 @@ const MultiSelectTable = ({ selectedRow, onRowClick, data }) => {
 
   const handleAnimalChange = (animalInfo) => {
     setSelectedAnimal(animalInfo);
-    console.log(animalInfo);
   };
 
   return (
@@ -78,6 +84,7 @@ const MultiSelectTable = ({ selectedRow, onRowClick, data }) => {
             required
             options={animals}
             label={"type"}
+            placeholder={"Animal..."}
             onChange={handleAnimalChange}
             width={"150px"}
             onClear={handleAnimalChange}

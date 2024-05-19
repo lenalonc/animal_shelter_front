@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { ReactComponent as Icon } from "../img/arrow-right.svg";
+import { GoogleMap } from "@react-google-maps/api";
 
 const Main = () => {
   const navigate = useNavigate();
@@ -79,12 +80,26 @@ const Main = () => {
             <br></br>
             <br></br>
             Explore more possibilities with our adoption shelter. Register or
-            log in to track animals you're interested in, view your past
-            adoptions, and more. Join us in making a lasting difference in the
-            lives of our shelter animals.
+            log in to track animals you're interested in. Join us in making a
+            lasting difference in the lives of our shelter animals. You can
+            visit at us MONDAY to FRIDAY
           </p>
+          <div className="map">
+            {/* <iframe
+              width="400"
+              height="500"
+              frameborder="0"
+              scrolling="no"
+              marginheight="0"
+              marginwidth="0"
+              src="https://maps.google.com/maps?width=400&amp;height=500&amp;hl=en&amp;q=Florence,%20Italy+(Marlo%20Animal%20Shelter)&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"
+            >
+              <a href="https://www.gps.ie/">gps devices</a>
+            </iframe> */}
+          
+          </div>
           <div className="d-inline-flex gap-2 mb-5">
-            <Link to={"/login"} state={{checked: true}}>
+            <Link to={"/login"} state={{ checked: true }}>
               <button
                 className="d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill btn-login"
                 type="button"
@@ -93,7 +108,7 @@ const Main = () => {
                 <Icon className="bi ms-2" width="24" height="24" />
               </button>
             </Link>
-            <Link to={"/login"} state={{checked: false}}>
+            <Link to={"/login"} state={{ checked: false }}>
               <button
                 className="btn btn-outline-secondary btn-lg px-4 rounded-pill btn-register"
                 type="button"

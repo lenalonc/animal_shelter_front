@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import api from "../../api/Api";
 
 const OwnerPage = () => {
-  //TODO:  kad ene selektuje nijedan owner da izadje obavestenje hej nisi selektovao nista!!!
+  //TODO:  kad ne selektuje nijedan owner da izadje obavestenje hej nisi selektovao nista!!!
 
   const [selectedRow, setSelectedRow] = useState(null);
   const [data, setData] = useState([]);
@@ -36,24 +36,6 @@ const OwnerPage = () => {
   const handleRowClick = (id) => {
     setSelectedRow((prevSelectedRow) => (prevSelectedRow === id ? null : id));
   };
-
-  useEffect(() => {
-    const hello = async () => {
-      try {
-        const response = await api.get("/owner/hello");
-        console.log(response.data);
-      } catch (err) {
-        if (err.response) {
-          console.log(err.response.data);
-          console.log(err.response.status);
-          console.log(err.response.headers);
-        } else {
-          console.log(`Error: ${err.message}`);
-        }
-      }
-    };
-    hello();
-  }, []);
 
   return (
     <div className="view-all-page">

@@ -24,13 +24,13 @@ const Navbar = () => {
             src={require("../img/logoRed_Paw Print Heart Connected.png")}
             className="logo-small"
           ></img>
-          <NavLink
+          <h2
             className="navbar-brand nav-text"
-            style={{ color: "white" }}
+            style={{ color: "white", marginTop: 5, cursor: "default" }}
             to={"/"}
           >
             Marlo Animal Shelter
-          </NavLink>
+          </h2>
           <button
             className="navbar-toggler"
             type="button"
@@ -53,11 +53,11 @@ const Navbar = () => {
                     Home
                   </NavLink>
                 </li>
-                <li className="nav-item">
+                {/* <li className="nav-item">
                   <a className="nav-link nav-text" href="#">
                     About us
                   </a>
-                </li>
+                </li> */}
 
                 <li className="nav-item dropdown">
                   <NavLink className="nav-link  nav-text" to={"pets?type=All"}>
@@ -115,16 +115,21 @@ const Navbar = () => {
                           Add
                         </NavLink>
                       </li>
+                      <li>
+                        <NavLink
+                          className="dropdown-item nav-drop"
+                          to={"/admins"}
+                        >
+                          Admins
+                        </NavLink>
+                      </li>
                     </ul>
                   </li>
                 )}
 
-                {(user.role === "admin" || user.role === "customer") && (
+                {user.role === "admin" && (
                   <li className="nav-item dropdown">
-                    <NavLink
-                      className="nav-link dropdown-toggle nav-text"
-                      to={"adoptions"}
-                    >
+                    <NavLink className="nav-link nav-text" to={"adoptions"}>
                       Adoptions
                     </NavLink>
                     <ul className="dropdown-menu">
@@ -155,7 +160,8 @@ const Navbar = () => {
                   style={{
                     display: "flex",
                     flexDirection: "row",
-                    marginLeft: 800,
+                    zIndex: 100,
+                    marginLeft: 920,
                   }}
                 >
                   <li className="nav-item">
@@ -174,7 +180,7 @@ const Navbar = () => {
                       to={"/login"}
                       state={{ checked: false }}
                     >
-                      Register
+                      Sign up
                     </NavLink>
                   </li>
                 </div>
@@ -182,28 +188,30 @@ const Navbar = () => {
 
               {user.role != "" && (
                 <div
-                  className="right-side"
+                  className={`right-side ${
+                    user.role === "admin" ? "admin-nav" : "customer-nav"
+                  }`}
                   style={{
                     display: "flex",
                     flexDirection: "row",
-                    marginLeft: 650,
                   }}
                 >
-                  <li className="nav-item">
-                    <NavLink
-                      className="nav-link nav-text"
-                      to={"/"}
-                      style={{ marginRight: 10 }}
-                    >
-                      Liked pets
-                    </NavLink>
-                  </li>
-
+                  {user.role === "customer" && (
+                    <li className="nav-item">
+                      <NavLink
+                        className="nav-link nav-text"
+                        to={"/pets/liked"}
+                        style={{ marginRight: 10, zIndex: 100, }}
+                      >
+                        Liked pets
+                      </NavLink>
+                    </li>
+                  )}
                   <li className="nav-item">
                     <NavLink
                       className="nav-link nav-text"
                       to={"/login"}
-                      state={{ checked: false }}
+                      state={{ checked: true }}
                       onClick={resetUser}
                     >
                       Logout
