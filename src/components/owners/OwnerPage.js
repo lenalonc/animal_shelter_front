@@ -51,7 +51,7 @@ const OwnerPage = () => {
             DETAILS
           </button>
         </Link>
-        <Link to={"add"}>
+        <Link to={"/owners/add"}>
           <button
             type="button"
             className="btn btn-primary btn-adopt btn-owner"

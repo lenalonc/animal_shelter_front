@@ -1,13 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import api from "../../api/Api";
 import SelectBox from "../pets/SelectBox";
 import PetCardAd from "./PetCardAdoption";
+import SuccessModal from "../Success modal";
+import ErrorModal from "../ErrorModal";
+import { UserContext } from "../context/UserContext";
 
 const AdoptionModal = ({ onClose, chosenPets }) => {
   const [owners, setOwners] = useState([]);
   const [formattedOwners, setFormattedOwners] = useState([]);
   const [chosenOwner, setChosenOwner] = useState(null);
   const [petImages, setPetImages] = useState({});
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     const getOwners = async () => {
@@ -25,7 +31,6 @@ const AdoptionModal = ({ onClose, chosenPets }) => {
     };
     getOwners();
     loadPetImages(chosenPets);
-    console.log(chosenPets);
   }, []);
 
   const loadPetImages = async (pets) => {
@@ -55,7 +60,7 @@ const AdoptionModal = ({ onClose, chosenPets }) => {
   const handleSave = () => {
     const currentDate = new Date().toISOString();
 
-    const admin = { id: 1 };
+    const admin = user;
 
     const owner = chosenOwner;
 
@@ -70,16 +75,31 @@ const AdoptionModal = ({ onClose, chosenPets }) => {
       pets,
     };
 
-    // console.log(JSON.stringify(adoption));
     const createAdoption = async () => {
       try {
         const response = await api.post("/adoption", adoption);
-        console.log(response.data);
-      } catch (error) {
-        console.error("Error fetching fields:", error);
+        setSuccess(true);
+      } catch (err) {
+        if (err.response) {
+          console.log(err.response.data);
+          console.log(err.response.status);
+          console.log(err.response.headers);
+        } else {
+          console.log(`Error: ${err.message}`);
+        }
+        setError(true);
       }
     };
     createAdoption();
+  };
+
+  const hideSuccessModal = () => {
+    setSuccess(false);
+    onClose();
+  };
+
+  const hideErrorModal = () => {
+    setError(false);
   };
 
   return (
@@ -127,6 +147,23 @@ const AdoptionModal = ({ onClose, chosenPets }) => {
           </button>
         </div>
       </div>
+      {success && (
+        <div className="success">
+          <SuccessModal
+            message={"Adoption successfully saved"}
+            onClose={hideSuccessModal}
+          />
+        </div>
+      )}
+
+      {error && (
+        <div className="success">
+          <ErrorModal
+            message={"Could not delete adoption"}
+            onClose={hideErrorModal}
+          />
+        </div>
+      )}
     </div>
   );
 };

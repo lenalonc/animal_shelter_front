@@ -4,11 +4,23 @@ import SelectMultiple from "./SelectMultiple";
 import SelectBox from "./SelectBox";
 import api from "../../api/Api";
 import { useNavigate } from "react-router-dom";
+import SuccessModal from "../Success modal";
+import WarningModal from "../WarningModal";
+import ErrorModal from "../ErrorModal";
+import AreYouSure from "../AreYouSureModal";
+//TODO: brisanje slike preko funkc u backu ako slika postoji
 
 const EditPetModal = ({ onClose, pet, setDeleted, refresh }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState(pet);
   const [breeds, setBreeds] = useState([]);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showNoChangesModal, setShowNoChangesModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [sure, setSure] = useState(false);
+  const [SuccessDeleteModal, setSuccessDeleteModal] = useState(false);
+  const [ErrorDeleteModal, setErrorDeleteModal] = useState(false);
+
   const sizeOptions = [
     { id: "s", label: "Small" },
     { id: "m", label: "Medium" },
@@ -34,34 +46,56 @@ const EditPetModal = ({ onClose, pet, setDeleted, refresh }) => {
     setFormData({ ...formData, breed: breedInfo });
   };
 
+  const savePet = async () => {
+    try {
+      const response = await api.put("/pet/" + pet.id, formData);
+      if (picture) {
+        savePictureLocally(picture);
+      }
+      setShowSuccessModal(true);
+      refresh();
+    } catch (err) {
+      if (err.response) {
+        console.log(err.response.data);
+        console.log(err.response.status);
+        console.log(err.response.headers);
+      } else {
+        console.log(`Error: ${err.message}`);
+        setShowErrorModal(true);
+      }
+    }
+  };
+
   const handleSave = (e) => {
     e.preventDefault();
-    const savePet = async () => {
-      try {
-        const response = await api.put("/pet/" + pet.id, formData);
-        if (picture) {
-          savePictureLocally(picture);
-        }
-        refresh();
-      } catch (error) {
-        console.error("Error fetching fields:", error);
-      }
-    };
-    savePet();
+
+    if (pet === formData && !picture) {
+      setShowNoChangesModal(true);
+    } else {
+      savePet();
+    }
   };
 
   const handleDelete = (e) => {
     e.preventDefault();
+    setSure(false);
     const deletePet = async () => {
       try {
         const response = await api.delete("/pet/" + pet.id);
-        //brisanje slike preko funkc u backu ako slika postoji
         setDeleted(true);
-        navigate("/pets?type=All");
-      } catch (error) {
-        console.error("Error deleting fields:", error);
+        setSuccessDeleteModal(true);
+      } catch (err) {
+        if (err.response) {
+          console.log(err.response.data);
+          console.log(err.response.status);
+          console.log(err.response.headers);
+        } else {
+          console.log(`Error: ${err.message}`);
+        }
+        setErrorDeleteModal(true);
       }
     };
+
     deletePet();
   };
 
@@ -77,6 +111,32 @@ const EditPetModal = ({ onClose, pet, setDeleted, refresh }) => {
       .catch((error) => {
         console.error("Error saving picture:", error);
       });
+  };
+
+  const hideSuccessModal = () => {
+    setShowSuccessModal(false);
+    onClose();
+  };
+
+  const hideNoChangesModal = () => {
+    setShowNoChangesModal(false);
+  };
+
+  const hideErrorModal = () => {
+    setShowErrorModal(false);
+  };
+
+  const hideSure = () => {
+    setSure(true);
+  };
+
+  const hideSuccessDeleteModal = () => {
+    setSuccessDeleteModal(false);
+    navigate("/pets?type=All");
+  };
+
+  const hideErrorDeleteModal = () => {
+    setErrorDeleteModal(false);
   };
 
   return (
@@ -388,7 +448,6 @@ const EditPetModal = ({ onClose, pet, setDeleted, refresh }) => {
             </div>
           </div>
         </div>
-
         <div
           className="modal-footer-custom"
           style={{
@@ -399,7 +458,7 @@ const EditPetModal = ({ onClose, pet, setDeleted, refresh }) => {
         >
           <button
             className="btn btn-primary btn-adopt btn-owner-details"
-            onClick={handleDelete}
+            onClick={() => setSure(true)}
             style={{
               width: "120px",
               marginRight: 0,
@@ -422,7 +481,54 @@ const EditPetModal = ({ onClose, pet, setDeleted, refresh }) => {
             Save
           </button>
         </div>
+        {showSuccessModal && (
+          <div className="success">
+            <SuccessModal
+              message={"Pet successfully updated"}
+              onClose={hideSuccessModal}
+            />
+          </div>
+        )}
+        {showNoChangesModal && (
+          <div className="no-changes">
+            <WarningModal
+              message={"No changes have been made!"}
+              onClose={hideNoChangesModal}
+            />
+          </div>
+        )}
+        {showErrorModal && (
+          <div className="no-changes">
+            <ErrorModal
+              message={"Could not update pets"}
+              onClose={hideErrorModal}
+            />
+          </div>
+        )}
+        {SuccessDeleteModal && (
+          <div className="success">
+            <SuccessModal
+              message={"Pet successfully deleted"}
+              onClose={hideSuccessDeleteModal}
+            />
+          </div>
+        )}
+        {ErrorDeleteModal && (
+          <div className="no-changes">
+            <ErrorModal
+              message={"Could not delete pet"}
+              onClose={hideErrorDeleteModal}
+            />
+          </div>
+        )}
       </div>
+      {sure && (
+        <AreYouSure
+          message={"Are you sure you want to delete this pet?"}
+          onClose={() => setSure(false)}
+          deletePet={handleDelete}
+        />
+      )}
     </div>
   );
 };

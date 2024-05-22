@@ -1,7 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import slika from "../../img/addOwner.jpg";
 import { useState, useEffect } from "react";
 import api from "../../api/Api";
+import SuccessModal from "../Success modal";
+import ErrorModal from "../ErrorModal";
 
 //TODO: two password input fields and check if they match before sending the data
 //TODO: Success modal when new owner is created
@@ -10,12 +12,16 @@ import api from "../../api/Api";
 const OwnerAdd = () => {
   const [fields, setFields] = useState([]);
   const [owner, setOwner] = useState([]);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getFields = async () => {
       try {
         const response = await api.get("/owner/fields");
         setFields(response.data);
+        // navigate("/owenrs");
       } catch (err) {
         if (err.response) {
           console.log(err.response.data);
@@ -43,7 +49,7 @@ const OwnerAdd = () => {
     try {
       const result = api.post("owner", owner);
       setOwner(result.data);
-      console.log(owner);
+      setSuccess(true);
     } catch (err) {
       if (err.response) {
         console.log(err.response.data);
@@ -52,6 +58,7 @@ const OwnerAdd = () => {
       } else {
         console.log(`Error: ${err.message}`);
       }
+      setError(true);
     }
   };
 
@@ -65,6 +72,14 @@ const OwnerAdd = () => {
 
   const handleInputBlur = (e) => {
     e.target.previousElementSibling.classList.remove("focused-label");
+  };
+
+  const hideSuccessModal = () => {
+    setSuccess(false);
+  };
+
+  const hideErrorModal = () => {
+    setError(false);
   };
 
   return (
@@ -140,6 +155,22 @@ const OwnerAdd = () => {
           </div>
         </div>
       </div>
+      {success && (
+        <div className="success">
+          <SuccessModal
+            message={"Owner successfully saved"}
+            onClose={hideSuccessModal}
+          />
+        </div>
+      )}
+      {error && (
+        <div className="success">
+          <ErrorModal
+            message={"Could not save owner"}
+            onClose={hideErrorModal}
+          />
+        </div>
+      )}
     </div>
   );
 };

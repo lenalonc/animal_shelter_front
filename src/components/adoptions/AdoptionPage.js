@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import api from "../../api/Api";
 import AdoptionDetailsModal from "./AdoptionDetails";
 
+//TODO: proveri ovde pozive nesto je cudnoo pisalo je za useEffect data da trigeruje a data unutar getAdoption pa se beskonacno poziva
+
 const AdoptionPage = () => {
   const [selectedRow, setSelectedRow] = useState(null);
   const [data, setData] = useState([]);
@@ -21,7 +23,6 @@ const AdoptionPage = () => {
         pets: adoption.pets.length,
       }));
       setFormattedData(formattedData);
-      console.log(formattedData);
     } catch (error) {
       console.error("Error fetching fields:", error);
     }
@@ -29,7 +30,7 @@ const AdoptionPage = () => {
 
   useEffect(() => {
     getAdoptions();
-  }, [data]);
+  }, []);
 
   const handleRowClick = (id) => {
     setSelectedRow((prevSelectedRow) => (prevSelectedRow === id ? null : id));

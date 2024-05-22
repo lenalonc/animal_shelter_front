@@ -3,9 +3,10 @@ import api from "../../api/Api";
 import SelectBox from "./SelectBox";
 import BreedSelectBox from "./BreedSelectBox";
 import SelectMultiple from "./SelectMultiple";
+import SuccessModal from "../Success modal";
+import { Link } from "react-router-dom";
+import ErrorModal from "../ErrorModal";
 
-//TODO: when searching an option if its not selected from options it should throw a
-//TODO: when u delete the selection of type of pet it shoudl delete that in the form and also affect the breeds selection
 //TODO: success modal for when pet is saved
 //TODO: error when saving modal
 
@@ -32,6 +33,8 @@ const PetAdd = () => {
   const [selectedAnimalType, setSelectedAnimalType] = useState(null);
   const [picture, setPicture] = useState(null);
   const [id, setId] = useState(null);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     const fetchFields = async () => {
@@ -70,8 +73,16 @@ const PetAdd = () => {
       try {
         const response = await api.post("/pet", formData);
         setId(response.data.id);
-      } catch (error) {
-        console.error("Error fetching fields:", error);
+        setSuccess(true);
+      } catch (err) {
+        if (err.response) {
+          console.log(err.response.data);
+          console.log(err.response.status);
+          console.log(err.response.headers);
+        } else {
+          console.log(`Error: ${err.message}`);
+        }
+        setError(true);
       }
     };
 
@@ -137,6 +148,14 @@ const PetAdd = () => {
       .catch((error) => {
         console.error("Error saving picture:", error);
       });
+  };
+
+  const hideSuccessModal = () => {
+    setSuccess(false);
+  };
+
+  const hideErrorModal = () => {
+    setError(false);
   };
 
   return (
@@ -418,6 +437,27 @@ const PetAdd = () => {
           </div>
         </form>
       </div>
+      {success && (
+        <div className="success">
+          <SuccessModal
+            message={
+              <div>
+                <Link to={`/pets/${id}`} className="link-custom">
+                  Pet
+                </Link>{" "}
+                successfully saved.
+              </div>
+            }
+            onClose={hideSuccessModal}
+          />
+        </div>
+      )}
+
+      {error && (
+        <div className="success">
+          <ErrorModal message={"Could not save pet"} onClose={hideErrorModal} />
+        </div>
+      )}
     </div>
   );
 };

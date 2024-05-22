@@ -1,10 +1,20 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../api/Api";
+import SuccessModal from "../Success modal";
+import ErrorModal from "../ErrorModal";
+import AreYouSure from "../AreYouSureModal";
+import WarningModal from "../WarningModal";
 
 const OwnerDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(false);
+  const [successDelete, setSuccessDelete] = useState(false);
+  const [errorDelete, setErrorDelete] = useState(false);
+  const [sure, setSure] = useState(false);
+  const [showNoChangesModal, setShowNoChangesModal] = useState(false);
 
   const [owner, setOwner] = useState({
     id: "",
@@ -14,18 +24,27 @@ const OwnerDetails = () => {
     email: "",
     role: "customer",
   });
+  
   const [originalRole, setOriginalRole] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [redirect, setRedirect] = useState(false);
+  const [originalOwner, setOriginalOwner] = useState();
 
   useEffect(() => {
     const getOwner = async () => {
       try {
         const response = await api.get("/owner/" + id);
         setOwner(response.data);
+        setOriginalOwner(response.data);
         setOriginalRole(response.data.role);
       } catch (err) {
-        console.log(`Error: ${err.message}`);
+        if (err.response) {
+          console.log(err.response.data);
+          console.log(err.response.status);
+          console.log(err.response.headers);
+        } else {
+          console.log(`Error: ${err.message}`);
+        }
       }
     };
     getOwner();
@@ -57,7 +76,7 @@ const OwnerDetails = () => {
 
   const handleCheckboxChange = (e) => {
     const isChecked = e.target.checked;
-    const newRole = isChecked ? "admin" : "customer"; // Changed "user" to "customer"
+    const newRole = isChecked ? "admin" : "customer";
     setOwner((prevOwner) => ({
       ...prevOwner,
       role: newRole,
@@ -65,12 +84,17 @@ const OwnerDetails = () => {
   };
 
   const handleSaveClick = async () => {
+    if (originalOwner === owner) {
+      setShowNoChangesModal(true);
+      return;
+    }
+    console.log(originalOwner);
+    console.log(owner === originalOwner);
     try {
-      await api.put("/owner/" + id, owner);
+      const response = await api.put("/owner/" + id, owner);
       setIsEditing(false);
-      if (owner.role !== originalRole) {
-        setRedirect(true);
-      }
+      setSuccess(true);
+      setOriginalOwner(response.data);
     } catch (err) {
       if (err.response) {
         console.log(err.response.data);
@@ -79,20 +103,49 @@ const OwnerDetails = () => {
       } else {
         console.log(`Error: ${err.message}`);
       }
+      setError(true);
     }
   };
 
-  const handleDeleteClick = async () => {
+  const handleDelete = async () => {
     try {
       await api.delete("/owner/" + id);
-      setRedirect(true);
+      setSuccessDelete(true);
+      setSure(false);
     } catch (err) {
-      console.log(`Error: ${err.message}`);
+      if (err.response) {
+        console.log(err.response.data);
+        console.log(err.response.status);
+        console.log(err.response.headers);
+      } else {
+        console.log(`Error: ${err.message}`);
+      }
+      setErrorDelete(true);
     }
   };
 
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
+  const hideSuccessModal = () => {
+    setSuccess(false);
+    if (owner.role !== originalRole) {
+      setRedirect(true);
+    }
+  };
+
+  const hideErrorModal = () => {
+    setError(false);
+  };
+
+  const hideSuccessDeleteModal = () => {
+    setSuccessDelete(false);
+    setRedirect(true);
+  };
+
+  const hideErrorDeleteModal = () => {
+    setErrorDelete(false);
   };
 
   return (
@@ -158,7 +211,7 @@ const OwnerDetails = () => {
                 </button>
                 <button
                   className="btn btn-primary btn-adopt btn-owner-details"
-                  onClick={handleDeleteClick}
+                  onClick={() => setSure(true)}
                   style={{ marginLeft: "auto", marginRight: 20, width: 90 }}
                 >
                   Delete
@@ -183,6 +236,58 @@ const OwnerDetails = () => {
           </div>
         </div>
       </div>
+      {success && (
+        <div className="success">
+          <SuccessModal
+            message={"Owner successfully updated"}
+            onClose={hideSuccessModal}
+          />
+        </div>
+      )}
+
+      {error && (
+        <div className="success">
+          <ErrorModal
+            message={"Could not update owner"}
+            onClose={hideErrorModal}
+          />
+        </div>
+      )}
+
+      {successDelete && (
+        <div className="success">
+          <SuccessModal
+            message={"Owner successfully deleted"}
+            onClose={hideSuccessDeleteModal}
+          />
+        </div>
+      )}
+
+      {errorDelete && (
+        <div className="success">
+          <ErrorModal
+            message={"Could not delete owner"}
+            onClose={hideErrorDeleteModal}
+          />
+        </div>
+      )}
+
+      {showNoChangesModal && (
+        <div className="no-changes">
+          <WarningModal
+            message={"No changes have been made!"}
+            onClose={() => setShowNoChangesModal(false)}
+          />
+        </div>
+      )}
+
+      {sure && (
+        <AreYouSure
+          message={"Are you sure you want to delete this owner?"}
+          onClose={() => setSure(false)}
+          deletePet={handleDelete}
+        />
+      )}
     </div>
   );
 };

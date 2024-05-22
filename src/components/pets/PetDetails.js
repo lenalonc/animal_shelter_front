@@ -4,6 +4,7 @@ import api from "../../api/Api";
 import HeartButton from "./HeartButton";
 import { UserContext } from "../context/UserContext";
 import EditPetModal from "./EditPetModal";
+import { setSelectionRange } from "@testing-library/user-event/dist/utils";
 
 const PetDetails = () => {
   const { id } = useParams();

@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import AdoptionModal from "./AdoptionModal";
 import api from "../../api/Api";
 import PetCardAd from "./PetCardAdoption";
+import SuccessModal from "../Success modal";
+import ErrorModal from "../ErrorModal";
+import AreYouSure from "../AreYouSureModal";
 
 //TODO: if no row is selected do not let them open details
 //TODO: are you sure you want to delete this adoption?
@@ -10,24 +13,32 @@ const AdoptionDetailsModal = ({ onClose, id }) => {
   const [adoption, setAdoption] = useState(null);
   const [petImages, setPetImages] = useState({});
   const [pets, setPets] = useState({});
+  const [successDelete, setSuccessDelete] = useState(false);
+  const [errorDelete, setErrorDelete] = useState(false);
+  const [sure, setSure] = useState(false);
 
   useEffect(() => {
     if (id) {
-      const getAdoption = async () => {
-        try {
-          const response = await api.get("/adoption/" + id);
-          setAdoption(response.data);
-          const formattedPets = response.data.pets.map(
-            (petData) => petData.pet
-          );
-          setPets(formattedPets);
-        } catch (error) {
-          console.error("Error fetching fields:", error);
-        }
-      };
       getAdoption();
     }
   }, []);
+
+  const getAdoption = async () => {
+    try {
+      const response = await api.get("/adoption/" + id);
+      setAdoption(response.data);
+      const formattedPets = response.data.pets.map((petData) => petData.pet);
+      setPets(formattedPets);
+    } catch (err) {
+      if (err.response) {
+        console.log(err.response.data);
+        console.log(err.response.status);
+        console.log(err.response.headers);
+      } else {
+        console.log(`Error: ${err.message}`);
+      }
+    }
+  };
 
   useEffect(() => {
     const loadPetImages = async (pets) => {
@@ -57,12 +68,30 @@ const AdoptionDetailsModal = ({ onClose, id }) => {
     const deleteAdoption = async () => {
       try {
         const response = await api.delete("/adoption/" + id);
-      } catch (error) {
-        console.error("Error fetching fields:", error);
+        setSure(false);
+        setSuccessDelete(true);
+      } catch (err) {
+        if (err.response) {
+          console.log(err.response.data);
+          console.log(err.response.status);
+          console.log(err.response.headers);
+        } else {
+          console.log(`Error: ${err.message}`);
+        }
+        setErrorDelete(true);
       }
     };
     deleteAdoption();
     onClose();
+  };
+
+  const hideSuccessDeleteModal = () => {
+    setSuccessDelete(false);
+    onClose();
+  };
+
+  const hideErrorDeleteModal = () => {
+    setErrorDelete(false);
   };
 
   return (
@@ -73,6 +102,7 @@ const AdoptionDetailsModal = ({ onClose, id }) => {
           height: "fit-content",
           width: "fit-content",
           paddingRight: 20,
+          minWidth: 400,
         }}
       >
         <div className="modal-header-custom" style={{ paddingBottom: 10 }}>
@@ -136,7 +166,7 @@ const AdoptionDetailsModal = ({ onClose, id }) => {
         >
           <button
             className="btn btn-primary btn-adopt btn-owner-details"
-            onClick={handleDelete}
+            onClick={() => setSure(true)}
             style={{
               width: "100px",
               marginRight: 10,
@@ -150,6 +180,31 @@ const AdoptionDetailsModal = ({ onClose, id }) => {
           </button>
         </div>
       </div>
+      {successDelete && (
+        <div className="success">
+          <SuccessModal
+            message={"Owner successfully deleted"}
+            onClose={hideSuccessDeleteModal}
+          />
+        </div>
+      )}
+
+      {errorDelete && (
+        <div className="success">
+          <ErrorModal
+            message={"Could not delete owner"}
+            onClose={hideErrorDeleteModal}
+          />
+        </div>
+      )}
+
+      {sure && (
+        <AreYouSure
+          message={"Are you sure you want to delete this owner?"}
+          onClose={() => setSure(false)}
+          deletePet={handleDelete}
+        />
+      )}
     </div>
   );
 };

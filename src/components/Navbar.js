@@ -7,10 +7,6 @@ const Navbar = () => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    console.log(user);
-  }, []);
-
   return (
     <div className="bd-example m-0 border-0 ">
       <nav
