@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../../api/Api";
 import AdoptionDetailsModal from "./AdoptionDetails";
+import WarningModal from "../WarningModal";
 
 //TODO: proveri ovde pozive nesto je cudnoo pisalo je za useEffect data da trigeruje a data unutar getAdoption pa se beskonacno poziva
 
@@ -11,6 +12,7 @@ const AdoptionPage = () => {
   const [data, setData] = useState([]);
   const [formattedData, setFormattedData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [warning, setWarning] = useState(false);
 
   const getAdoptions = async () => {
     try {
@@ -23,21 +25,31 @@ const AdoptionPage = () => {
         pets: adoption.pets.length,
       }));
       setFormattedData(formattedData);
-    } catch (error) {
-      console.error("Error fetching fields:", error);
+    } catch (err) {
+      if (err.response) {
+        console.log(err.response.data);
+        console.log(err.response.status);
+        console.log(err.response.headers);
+      } else {
+        console.log(`Error: ${err.message}`);
+      }
     }
   };
 
   useEffect(() => {
     getAdoptions();
-  }, []);
+  }, [data]);
 
   const handleRowClick = (id) => {
     setSelectedRow((prevSelectedRow) => (prevSelectedRow === id ? null : id));
   };
 
   const openModal = () => {
-    setIsModalOpen(true);
+    if (selectedRow === null) {
+      setWarning(true);
+    } else {
+      setIsModalOpen(true);
+    }
   };
 
   const closeModal = () => {
@@ -56,6 +68,13 @@ const AdoptionPage = () => {
       ></TableCustom>
       {isModalOpen && (
         <AdoptionDetailsModal onClose={closeModal} id={`${selectedRow}`} />
+      )}
+
+      {warning && (
+        <WarningModal
+          message={"No adoption selected"}
+          onClose={() => setWarning(false)}
+        />
       )}
       <div className="buttons-container">
         <button

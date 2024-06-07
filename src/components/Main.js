@@ -1,9 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
 import { ReactComponent as Icon } from "../img/arrow-right.svg";
 import { GoogleMap } from "@react-google-maps/api";
+import { useEffect } from "react";
 
 const Main = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleAdoptClick = (type) => {
     navigate(`/pets?type=${type}`);
@@ -76,13 +81,16 @@ const Main = () => {
             and responsible pet ownership, we endeavor to ensure that every
             furry resident finds their perfect match. Join us in our mission to
             make a difference in the lives of these deserving animals.
-            <span style={{ color: "#8a251d" }}> Learn more</span>
             <br></br>
             <br></br>
             Explore more possibilities with our adoption shelter. Register or
             log in to track animals you're interested in. Join us in making a
             lasting difference in the lives of our shelter animals. You can
-            visit at us MONDAY to FRIDAY
+            visit at us{" "}
+            <span style={{ color: "#8a251d" }}>
+              MONDAY to FRIDAY from 09 h to 21h, 1234 Paws and Claws Boulevard,
+              Barkington.
+            </span>
           </p>
           <div className="map">
             {/* <iframe
@@ -96,7 +104,6 @@ const Main = () => {
             >
               <a href="https://www.gps.ie/">gps devices</a>
             </iframe> */}
-          
           </div>
           <div className="d-inline-flex gap-2 mb-5">
             <Link to={"/login"} state={{ checked: true }}>

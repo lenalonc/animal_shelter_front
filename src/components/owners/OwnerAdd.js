@@ -11,17 +11,24 @@ import ErrorModal from "../ErrorModal";
 
 const OwnerAdd = () => {
   const [fields, setFields] = useState([]);
-  const [owner, setOwner] = useState([]);
+  const [owner, setOwner] = useState({
+    firstname: "",
+    lastname: "",
+    username: "",
+    email: "",
+    password: "",
+  });
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
   const navigate = useNavigate();
+  const [flag, setFlag] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   useEffect(() => {
     const getFields = async () => {
       try {
         const response = await api.get("/owner/fields");
         setFields(response.data);
-        // navigate("/owenrs");
       } catch (err) {
         if (err.response) {
           console.log(err.response.data);
@@ -46,19 +53,28 @@ const OwnerAdd = () => {
 
   const handleSave = async (e) => {
     e.preventDefault();
-    try {
-      const result = api.post("owner", owner);
-      setOwner(result.data);
-      setSuccess(true);
-    } catch (err) {
-      if (err.response) {
-        console.log(err.response.data);
-        console.log(err.response.status);
-        console.log(err.response.headers);
-      } else {
-        console.log(`Error: ${err.message}`);
+    setFlag(true);
+    if (checkData()) {
+      try {
+        const result = await api.post("owner", owner);
+        console.log(result.data);
+        setOwner(result.data);
+        setSuccess(true);
+      } catch (err) {
+        if (err.response) {
+          console.log(err.response.data);
+          console.log(err.response.status);
+          console.log(err.response.headers);
+          if (err.response.status === 403) {
+            setShowError(true);
+          } else {
+            setError(true);
+          }
+        } else {
+          console.log(`Error: ${err.message}`);
+          setError(true);
+        }
       }
-      setError(true);
     }
   };
 
@@ -76,10 +92,27 @@ const OwnerAdd = () => {
 
   const hideSuccessModal = () => {
     setSuccess(false);
+    navigate("/owners");
   };
 
   const hideErrorModal = () => {
     setError(false);
+  };
+
+  const checkData = () => {
+    return (
+      owner &&
+      owner.firstname &&
+      owner.firstname !== "" &&
+      owner.lastname &&
+      owner.lastname !== "" &&
+      owner.username !== "" &&
+      owner.email &&
+      owner.email !== "" &&
+      owner.password &&
+      owner.password != "" &&
+      /[!@#$%^&*(),.?":{}|<>]/.test(owner.password)
+    );
   };
 
   return (
@@ -123,9 +156,21 @@ const OwnerAdd = () => {
                     onBlur={handleInputBlur}
                     onChange={handleInputChange}
                     defaultValue={field === "dateOfBirth" ? "2000-01-01" : ""}
+                    style={{
+                      border:
+                        flag && owner[field] === "" ? "2px solid #8a251d" : "",
+                    }}
                   />
                 </div>
               ))}
+              {showError && (
+                <label
+                  style={{ textAlign: "center" }}
+                  className="error-owner-add"
+                >
+                  Username or email is already registered.
+                </label>
+              )}
               <div className="add-owner-btncontainer">
                 <button
                   type="submit"

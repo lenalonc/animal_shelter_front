@@ -45,8 +45,8 @@
   background: rgb(232, 217, 217);
   justify-content: center;
   display: flex;
-  margin: 20px auto;
-  padding: 15px;
+  margin: 0px auto;
+  padding: 10px 5px 10px 5px;
   border: 1px solid rgb(213, 198, 198);
   border-radius: 5px;
 }
@@ -104,6 +104,7 @@
 .login input {
   border-color: rgb(213, 198, 198);
   box-shadow: 0 0 10px rgba(93, 11, 11, 0.2);
+  font-size: 14px;
 }
 
 .login ::placeholder {
@@ -154,4 +155,23 @@
 
 #chk:checked ~ .signup label {
   transform: scale(0.6);
+}
+
+.error-login {
+  height: 20px;
+  margin-top: 0px !important;
+  padding: 0;
+}
+
+.field-login label {
+  margin: 0px !important;
+  padding: 0px !important;
+  color: #8a251d;
+  font-size: 11px;
+}
+
+.field-login {
+  margin-top: 5px;
+  margin: 10px auto !important;
+  font-size: 14px;
 }

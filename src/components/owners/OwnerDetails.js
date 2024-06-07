@@ -15,6 +15,7 @@ const OwnerDetails = () => {
   const [errorDelete, setErrorDelete] = useState(false);
   const [sure, setSure] = useState(false);
   const [showNoChangesModal, setShowNoChangesModal] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   const [owner, setOwner] = useState({
     id: "",
@@ -24,10 +25,9 @@ const OwnerDetails = () => {
     email: "",
     role: "customer",
   });
-  
+
   const [originalRole, setOriginalRole] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-  const [redirect, setRedirect] = useState(false);
   const [originalOwner, setOriginalOwner] = useState();
 
   useEffect(() => {
@@ -49,12 +49,6 @@ const OwnerDetails = () => {
     };
     getOwner();
   }, [id]);
-
-  useEffect(() => {
-    if (redirect) {
-      navigate("/owners");
-    }
-  }, [redirect, navigate]);
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -88,22 +82,29 @@ const OwnerDetails = () => {
       setShowNoChangesModal(true);
       return;
     }
-    console.log(originalOwner);
-    console.log(owner === originalOwner);
-    try {
-      const response = await api.put("/owner/" + id, owner);
-      setIsEditing(false);
-      setSuccess(true);
-      setOriginalOwner(response.data);
-    } catch (err) {
-      if (err.response) {
-        console.log(err.response.data);
-        console.log(err.response.status);
-        console.log(err.response.headers);
-      } else {
-        console.log(`Error: ${err.message}`);
+    if (checkData()) {
+      try {
+        const response = await api.put("/owner/" + id, owner);
+        setIsEditing(false);
+        setSuccess(true);
+        setOriginalOwner(response.data);
+        setShowError(false);
+      } catch (err) {
+        if (err.response) {
+          if (err.response.status === 403) {
+            setShowError(true);
+          } else {
+            setError(true);
+            setShowError(false);
+          }
+          console.log(err.response.data);
+          console.log(err.response.status);
+          console.log(err.response.headers);
+        } else {
+          console.log(`Error: ${err.message}`);
+          setError(true);
+        }
       }
-      setError(true);
     }
   };
 
@@ -130,8 +131,10 @@ const OwnerDetails = () => {
 
   const hideSuccessModal = () => {
     setSuccess(false);
-    if (owner.role !== originalRole) {
-      setRedirect(true);
+    if (owner.role === "customer") {
+      navigate("/owners");
+    } else {
+      navigate("/admins");
     }
   };
 
@@ -141,11 +144,30 @@ const OwnerDetails = () => {
 
   const hideSuccessDeleteModal = () => {
     setSuccessDelete(false);
-    setRedirect(true);
+    navigate("/owners");
   };
 
   const hideErrorDeleteModal = () => {
     setErrorDelete(false);
+  };
+
+  const checkData = () => {
+    return (
+      owner &&
+      owner.firstname &&
+      owner.firstname !== "" &&
+      owner.lastname &&
+      owner.lastname !== "" &&
+      owner.email &&
+      owner.email !== "" &&
+      owner.username &&
+      owner.username !== ""
+    );
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    setOwner(originalOwner);
   };
 
   return (
@@ -191,21 +213,29 @@ const OwnerDetails = () => {
                     value={owner[key]}
                     onChange={isEditing ? handleInputChange : null}
                     disabled={!isEditing}
-                    style={{ width: 300, marginLeft: 10 }}
+                    style={{
+                      width: 300,
+                      marginLeft: 10,
+                      border: owner[key] === "" ? "2px solid #8a251d" : "",
+                    }}
                   />
                 </div>
               );
             }
             return null;
           })}
-
+          {showError && (
+            <label style={{ textAlign: "center" }} className="error-owner-add">
+              Username or email is already registered.
+            </label>
+          )}
           <div className="buttons-owner-details">
             {isEditing ? (
               <>
                 <button
                   className="btn btn-primary btn-adopt btn-owner-details"
                   style={{ marginRight: 120, marginLeft: 0, width: 95 }}
-                  onClick={() => setIsEditing(false)}
+                  onClick={handleCancel}
                 >
                   Cancel
                 </button>

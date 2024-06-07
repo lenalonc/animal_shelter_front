@@ -537,3 +537,12 @@ see-pets .custom-select {
   color: #5e1914;
   transition: font-size 0.3s;
 }
+
+.pet-input-error {
+  margin: 0px !important;
+  padding: 0px !important;
+  color: #8a251d;
+  font-size: 11px;
+  text-align: center !important;
+  justify-self: center;
+}

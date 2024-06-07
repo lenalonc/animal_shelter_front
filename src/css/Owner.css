@@ -342,3 +342,12 @@ input[type="date"] {
   left: 37px;
   color: #f5f5f5;
 }
+
+.error-owner-add {
+  margin-top: -10px;
+  margin-left: 10px;
+  padding: 0px !important;
+  color: #8a251d;
+  font-size: 14px;
+  justify-content: center;
+}

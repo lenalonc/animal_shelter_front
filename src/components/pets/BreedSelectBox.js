@@ -11,6 +11,7 @@ const BreedSelectBox = ({
   disabled,
   selectedAnimalType,
   preselectedOption,
+  onClear
 }) => {
   const [optionsReformated, setOptionsReformated] = useState([]);
   const [selectedOption, setSelectedOption] = useState(preselectedOption);
@@ -68,6 +69,7 @@ const BreedSelectBox = ({
     } else if (actionMeta.action === "clear") {
       onChange(null);
       setSelectedOption(null);
+      if (onClear) onClear();
     }
   };
 

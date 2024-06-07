@@ -3,6 +3,8 @@ import api from "../../api/Api";
 import TableCustom from "./Table";
 import TableAdmins from "./TableAdmins";
 import { Link } from "react-router-dom";
+import ErrorModal from "../ErrorModal";
+import SuccessModal from "../Success modal";
 
 const Admins = () => {
   const [selectedRow, setSelectedRow] = useState(null);
@@ -39,7 +41,7 @@ const Admins = () => {
 
   return (
     <div className="view-all-page">
-      <h2 className="title-tbl">OWNERS</h2>
+      <h2 className="title-tbl">ADMINS</h2>
       <TableAdmins
         onRowClick={handleRowClick}
         selectedRow={selectedRow}

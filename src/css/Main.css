@@ -313,6 +313,19 @@
 }
 
 .warning-modal {
-  width: 420px!important;
+  width: 440px !important;
   height: 180px !important;
+}
+
+.warning-body {
+  margin-top: 30px !important;
+}
+
+.sure-footer {
+  padding: 0 15px 0 15px !important;
+}
+
+.sure-body {
+  margin-top: 35px !important;
+  margin-bottom: 5px !important;
 }

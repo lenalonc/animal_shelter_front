@@ -10,7 +10,7 @@ import ErrorModal from "../ErrorModal";
 import AreYouSure from "../AreYouSureModal";
 //TODO: brisanje slike preko funkc u backu ako slika postoji
 
-const EditPetModal = ({ onClose, pet, setDeleted, refresh }) => {
+const EditPetModal = ({ onClose, pet, setDeleted, refresh, img }) => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState(pet);
   const [breeds, setBreeds] = useState([]);
@@ -34,6 +34,7 @@ const EditPetModal = ({ onClose, pet, setDeleted, refresh }) => {
 
   const handlePictureChange = (e) => {
     setPicture(e.target.files[0]);
+    img = true;
   };
 
   const handleInputChange = (e) => {
@@ -68,11 +69,12 @@ const EditPetModal = ({ onClose, pet, setDeleted, refresh }) => {
 
   const handleSave = (e) => {
     e.preventDefault();
-
-    if (pet === formData && !picture) {
+    if (!checkChanges() && ((img && !picture) || (!picture && !img))) {
       setShowNoChangesModal(true);
     } else {
-      savePet();
+      if (checkData()) {
+        savePet();
+      }
     }
   };
 
@@ -139,6 +141,58 @@ const EditPetModal = ({ onClose, pet, setDeleted, refresh }) => {
     setErrorDeleteModal(false);
   };
 
+  const handleClear = () => {
+    setFormData({ ...formData, sex: "" });
+  };
+
+  const handleClearSize = () => {
+    setFormData({ ...formData, size: "" });
+  };
+
+  const checkData = () => {
+    return (
+      formData &&
+      formData.name &&
+      formData.name !== "" &&
+      formData.animal &&
+      formData.animal.id &&
+      formData.sex !== "" &&
+      formData.size &&
+      formData.size !== "" &&
+      (formData.years || formData.months) &&
+      !(
+        ((formData.years === 0 || formData.years === "0") &&
+          formData.months === 0) ||
+        formData.months === "0"
+      )
+    );
+  };
+
+  const onClearBreed = () => {
+    setFormData({ ...formData, breed: null });
+  };
+
+  const checkChanges = () => {
+    return (
+      pet.name !== formData.name ||
+      pet.sex !== formData.sex ||
+      (formData?.breed
+        ? pet?.breed
+          ? formData.breed.breed !== pet.breed.breed
+          : formData.breed !== pet?.breed
+        : formData?.breed !== pet?.breed) ||
+      pet.colors !== formData.colors ||
+      pet.size !== formData.size ||
+      Number(pet.weight) !== Number(formData.weight) ||
+      pet.vaccinated !== formData.vaccinated ||
+      pet.sterilization !== formData.sterilization ||
+      !(
+        Number(pet.years) === Number(formData.years) &&
+        Number(pet.months) === Number(formData.months)
+      )
+    );
+  };
+
   return (
     <div className="modal-custom">
       <div
@@ -174,7 +228,10 @@ const EditPetModal = ({ onClose, pet, setDeleted, refresh }) => {
               className="input-add-owner input-pet-prime"
               required
               onChange={handleInputChange}
-              style={{ marginLeft: 10 }}
+              style={{
+                marginLeft: 10,
+                border: formData.name === "" ? "2px solid #8a251d" : "",
+              }}
               defaultValue={pet.name}
             />
           </div>
@@ -195,6 +252,7 @@ const EditPetModal = ({ onClose, pet, setDeleted, refresh }) => {
               preselectedOption={pet.breed}
               width={300}
               disabled={false}
+              onClear={onClearBreed}
             />
           </div>
           <div
@@ -220,6 +278,8 @@ const EditPetModal = ({ onClose, pet, setDeleted, refresh }) => {
               preselectedOption={genderOptions.find(
                 (opt) => opt.label.toLowerCase() === pet.sex.toLowerCase()
               )}
+              error={formData.sex === ""}
+              onClear={handleClear}
             />
           </div>
           <div className="pet-input pet-input-details" style={{ flex: " 1 1" }}>
@@ -314,6 +374,8 @@ const EditPetModal = ({ onClose, pet, setDeleted, refresh }) => {
                 preselectedOption={sizeOptions.find(
                   (opt) => opt.label.toLowerCase() === pet.size.toLowerCase()
                 )}
+                error={formData.size === ""}
+                onClear={handleClearSize}
               />
             </div>
           </div>
@@ -354,7 +416,15 @@ const EditPetModal = ({ onClose, pet, setDeleted, refresh }) => {
                 onChange={handleInputChange}
                 value={formData.years || 0}
                 min={0}
-                style={{ marginRight: 10, width: 54 }}
+                style={{
+                  marginRight: 10,
+                  width: 54,
+                  border:
+                    (formData.months === 0 || formData.months === "0") &&
+                    (formData.years === 0 || formData.years === "0")
+                      ? "2px solid #8a251d"
+                      : "",
+                }}
               />
             </div>
             <div className="pet-input input-pet pet-input-details">
@@ -375,7 +445,14 @@ const EditPetModal = ({ onClose, pet, setDeleted, refresh }) => {
                 value={formData.months || 0}
                 min={0}
                 max={11}
-                style={{ width: 54 }}
+                style={{
+                  width: 54,
+                  border:
+                    (formData.months === 0 || formData.months === "0") &&
+                    (formData.years === 0 || formData.years === "0")
+                      ? "2px solid #8a251d"
+                      : "",
+                }}
               />
             </div>
             <div className="custom-file-upload">
@@ -388,13 +465,40 @@ const EditPetModal = ({ onClose, pet, setDeleted, refresh }) => {
                 onChange={handlePictureChange}
                 style={{ display: "none" }}
               />
-              <label
+              {/* <label
                 htmlFor="picture"
                 className="custom-button-file"
                 style={{ marginLeft: 25 }}
               >
                 image
-              </label>
+              </label> */}
+              {img ? (
+                <label
+                  htmlFor="picture"
+                  className="custom-button-file"
+                  style={{ marginLeft: 25 }}
+                >
+                  Picture saved{" "}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    fill="currentColor"
+                    className="bi bi-check-all"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M8.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L2.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093L8.95 4.992zm-.92 5.14.92.92a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 1 0-1.091-1.028L9.477 9.417l-.485-.486z" />
+                  </svg>
+                </label>
+              ) : (
+                <label
+                  htmlFor="picture"
+                  className="custom-button-file"
+                  style={{ marginLeft: 25 }}
+                >
+                  Choose image
+                </label>
+              )}
             </div>
           </div>
           <div className="checks">

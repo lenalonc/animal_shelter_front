@@ -8,6 +8,7 @@ const SelectBox = ({
   preselectedOption,
   placeholder,
   onClear,
+  error,
 }) => {
   const optionsReformated = options.map((op) => ({
     value: op.id,
@@ -47,7 +48,12 @@ const SelectBox = ({
     }),
     control: (provided, state) => ({
       ...provided,
-      borderColor: state.isFocused ? "black" : "rgb(204, 204, 204)",
+      border: error
+        ? "2px solid #8a251d"
+        : state.isFocused
+        ? "1px solid black"
+        : "1 px solid rgb(204, 204, 204)",
+
       boxShadow: state.isFocused ? "0 0 0 0.85px black" : provided.boxShadow,
       "&:hover": {
         borderColor: state.isFocused ? "black" : "rgb(204, 204, 204)",

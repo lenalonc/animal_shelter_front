@@ -8,7 +8,7 @@ const AreYouSure = ({ message, onClose, deletePet }) => {
     <div className="modal-custom">
       <div
         className="modal-content-custom content-success yes-no-modal"
-        style={{ width: 550, height: 250, padding: 30 }}
+        style={{ width: 560, height: 260, padding: 30 }}
       >
         <div className="modal-header-custom">
           <button
@@ -19,18 +19,18 @@ const AreYouSure = ({ message, onClose, deletePet }) => {
           ></button>
         </div>
         <div
-          className="modal-body-custom body-success"
+          className="modal-body-custom body-success sure-body"
           style={{ fontSize: 18, padding: 50, margin: 0 }}
         >
           {message}
         </div>
         <div
-          className="modal-footer-custom"
+          className="modal-footer-custom sure-footer"
           style={{
             display: "flex",
             justifyContent: "space-between",
-            height: "auto",
-            paddingBottom: 30,
+            height: 100,
+            padding: "10 15 0 15",
           }}
         >
           <button

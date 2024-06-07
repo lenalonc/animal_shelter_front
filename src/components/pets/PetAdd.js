@@ -4,8 +4,9 @@ import SelectBox from "./SelectBox";
 import BreedSelectBox from "./BreedSelectBox";
 import SelectMultiple from "./SelectMultiple";
 import SuccessModal from "../Success modal";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ErrorModal from "../ErrorModal";
+import done from "../../img/check-all.svg";
 
 //TODO: success modal for when pet is saved
 //TODO: error when saving modal
@@ -35,6 +36,8 @@ const PetAdd = () => {
   const [id, setId] = useState(null);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
+  const [flag, setFlag] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFields = async () => {
@@ -68,7 +71,7 @@ const PetAdd = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    setFlag(true);
     const savePet = async () => {
       try {
         const response = await api.post("/pet", formData);
@@ -85,8 +88,9 @@ const PetAdd = () => {
         setError(true);
       }
     };
-
-    savePet();
+    if (checkData()) {
+      savePet();
+    }
   };
 
   useEffect(() => {
@@ -152,10 +156,30 @@ const PetAdd = () => {
 
   const hideSuccessModal = () => {
     setSuccess(false);
+    navigate("/pets");
   };
 
   const hideErrorModal = () => {
     setError(false);
+  };
+
+  const checkData = () => {
+    return (
+      formData &&
+      formData.name &&
+      formData.name !== "" &&
+      formData.animal &&
+      formData.animal.id &&
+      formData.sex !== "" &&
+      formData.size &&
+      formData.size !== "" &&
+      (formData.years || formData.months) &&
+      !(
+        ((formData.years === 0 || formData.years === "0") &&
+          formData.months === 0) ||
+        formData.months === "0"
+      )
+    );
   };
 
   return (
@@ -168,7 +192,7 @@ const PetAdd = () => {
           <div className="inputs-container">
             <div className="pet-input" style={{ flex: "" }}>
               <label htmlFor={"text"} className="label-add-owner">
-                Name:
+                Name*
               </label>
               <input
                 type={"text"}
@@ -177,11 +201,15 @@ const PetAdd = () => {
                 className="input-add-owner input-pet-prime"
                 required
                 onChange={handleInputChange}
+                style={{
+                  border:
+                    flag && formData.name === "" ? "2px solid #8a251d" : "",
+                }}
               />
             </div>
             <div className="pet-input" style={{ flex: " 1 1" }}>
               <label htmlFor={"text"} className="label-add-owner">
-                Type of animal:
+                Type of animal*
               </label>
               <SelectBox
                 type={"text"}
@@ -191,6 +219,7 @@ const PetAdd = () => {
                 required
                 options={animals}
                 label={"type"}
+                error={flag && formData.animal.id === null}
                 onChange={handleAnimalChange}
                 width={"200px"}
                 onFocus={handleInputFocus}
@@ -199,7 +228,7 @@ const PetAdd = () => {
             </div>
             <div className="pet-input" style={{ flex: " 1 1" }}>
               <label htmlFor={"text"} className="label-add-owner">
-                Breed:
+                Breed
               </label>
               <BreedSelectBox
                 type={"text"}
@@ -218,9 +247,10 @@ const PetAdd = () => {
             </div>
             <div className="pet-input" style={{ flex: " 1 1 " }}>
               <label htmlFor={"text"} className="label-add-owner">
-                Gender:
+                Gender*
               </label>
               <SelectBox
+                error={flag && formData.sex === ""}
                 onChange={(selectedOption) =>
                   handleInputChange({
                     target: { name: "sex", value: selectedOption.label },
@@ -236,7 +266,7 @@ const PetAdd = () => {
             </div>
             <div className="pet-input" style={{ flex: " 1 1" }}>
               <label htmlFor={"text"} className="label-add-owner">
-                Colors:
+                Colors
               </label>
               <SelectMultiple
                 type={"text"}
@@ -259,13 +289,14 @@ const PetAdd = () => {
             </div>
             <div className="pet-input" style={{ flex: " 1 1" }}>
               <label htmlFor={"text"} className="label-add-owner">
-                Size:
+                Size*
               </label>
               <SelectBox
                 type={"text"}
                 id={"size"}
                 name={"size"}
                 className="input-add-owner input-pet-text"
+                error={flag && formData.size === ""}
                 required
                 onChange={(selectedOption) =>
                   handleInputChange({
@@ -296,6 +327,14 @@ const PetAdd = () => {
                 onChange={handleInputChange}
                 value={formData.years || 0}
                 min={0}
+                style={{
+                  border:
+                    flag &&
+                    (formData.months === 0 || formData.months === "0") &&
+                    (formData.years === 0 || formData.years === "0")
+                      ? "2px solid #8a251d"
+                      : "",
+                }}
               />
             </div>
             <div className="pet-input">
@@ -314,6 +353,14 @@ const PetAdd = () => {
                 value={formData.months || 0}
                 min={0}
                 max={11}
+                style={{
+                  border:
+                    flag &&
+                    (formData.months === 0 || formData.months === "0") &&
+                    (formData.years === 0 || formData.years === "0")
+                      ? "2px solid #8a251d"
+                      : "",
+                }}
               />
             </div>
             <div className="pet-input" style={{ flex: "0 0 120px" }}>
@@ -421,9 +468,25 @@ const PetAdd = () => {
                   onChange={handlePictureChange}
                   style={{ display: "none" }} // hide the default file input
                 />
-                <label htmlFor="picture" className="custom-button-file">
-                  Choose image
-                </label>
+                {picture ? (
+                  <label htmlFor="picture" className="custom-button-file">
+                    {/* <img src={done}></img> */}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      fill="currentColor"
+                      className="bi bi-check-all"
+                      viewBox="0 0 16 16"
+                    >
+                      <path d="M8.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L2.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093L8.95 4.992zm-.92 5.14.92.92a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 1 0-1.091-1.028L9.477 9.417l-.485-.486z" />
+                    </svg>
+                  </label>
+                ) : (
+                  <label htmlFor="picture" className="custom-button-file">
+                    Choose image
+                  </label>
+                )}
               </div>
             </div>
           </div>

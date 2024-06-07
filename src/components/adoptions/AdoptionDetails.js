@@ -102,7 +102,7 @@ const AdoptionDetailsModal = ({ onClose, id }) => {
           height: "fit-content",
           width: "fit-content",
           paddingRight: 20,
-          minWidth: 400,
+          minWidth: 420,
         }}
       >
         <div className="modal-header-custom" style={{ paddingBottom: 10 }}>
@@ -183,7 +183,7 @@ const AdoptionDetailsModal = ({ onClose, id }) => {
       {successDelete && (
         <div className="success">
           <SuccessModal
-            message={"Owner successfully deleted"}
+            message={"Adoption successfully deleted"}
             onClose={hideSuccessDeleteModal}
           />
         </div>
@@ -192,7 +192,7 @@ const AdoptionDetailsModal = ({ onClose, id }) => {
       {errorDelete && (
         <div className="success">
           <ErrorModal
-            message={"Could not delete owner"}
+            message={"Could not delete adoption"}
             onClose={hideErrorDeleteModal}
           />
         </div>
@@ -200,7 +200,7 @@ const AdoptionDetailsModal = ({ onClose, id }) => {
 
       {sure && (
         <AreYouSure
-          message={"Are you sure you want to delete this owner?"}
+          message={"Are you sure you want to delete this adoption?"}
           onClose={() => setSure(false)}
           deletePet={handleDelete}
         />

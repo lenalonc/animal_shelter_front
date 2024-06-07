@@ -10,18 +10,19 @@ const WarningModal = ({ message, onClose }) => {
             type="button"
             className="btn-close"
             onClick={onClose}
-            style={{ marginTop: 10 }}
+            style={{}}
           ></button>
         </div>
         <div
-          className="modal-body-custom body-success"
+          className="modal-body-custom body-success warning-body"
           style={{
             justifyContent: "center",
             alignItems: "center",
-            marginBottom: 10,
-            padding: 30,
+            marginBottom: 20,
+            marginTop: "0 !important",
+            padding: 0,
             textAlign: "center",
-            marginTop: 20
+            height: 30,
           }}
         >
           {" "}

@@ -14,6 +14,7 @@ const PetDetails = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [deleted, setDeleted] = useState(false);
   const [heart, setHeart] = useState(false);
+  const [hasPicture, setHasPicture] = useState(false);
 
   useEffect(() => {
     getPetDetails();
@@ -23,13 +24,16 @@ const PetDetails = () => {
     try {
       const img = await import(`../../img/pets/pet${petData.id}.jpg`);
       setPetImage(img.default);
+      setHasPicture(true);
     } catch (err) {
       if (petData.animal && petData.animal.type === "CAT") {
         const img = await import("../../img/pets/placeholderCat.jpg");
         setPetImage(img.default);
+        setHasPicture(false);
       } else {
         const img = await import("../../img/pets/placeholderDog.jpg");
         setPetImage(img.default);
+        setHasPicture(false);
       }
     }
   };
@@ -172,6 +176,7 @@ const PetDetails = () => {
           pet={pet}
           setDeleted={setDeleted}
           refresh={getPetDetails}
+          img={hasPicture}
         />
       )}
     </div>
