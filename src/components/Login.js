@@ -2,6 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import api from "../api/Api";
 import { UserContext } from "./context/UserContext";
 import { useLocation, useNavigate } from "react-router-dom";
+import ErrorModal from "./ErrorModal";
 
 const LoginForm = () => {
   const { setUser, saveUserToLocalStorage } = useContext(UserContext);
@@ -20,14 +21,13 @@ const LoginForm = () => {
     lastname: "",
     password: "",
   });
-  const [showError, setShowError] = useState(false);
-  // const [invalidEmail, setInvalidEmail] = useState(false);
-  // const [invalidUsername, setInvalidUsername] = useState(false);
+  const [showError, setShowError] = useState(null);
   const [invalidPassword, setInvalidPassword] = useState(false);
   const [flag, setFlag] = useState(false);
   const [flagLogin, setFlagLogin] = useState(false);
   const punctuationRegex = /[!@#$%^&*(),.?":{}|<>]/;
-  const [invalid, setInvalid] = useState(false);
+  const [invalid, setInvalid] = useState(null);
+  const [systemError, setSystemError] = useState("");
 
   const toggleCheckbox = () => {
     setIsChecked(!isChecked);
@@ -47,6 +47,7 @@ const LoginForm = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setFlagLogin(true);
+    setShowError(null);
     if (checkLogin()) {
       try {
         const response = await api.post("/login", loginData);
@@ -65,11 +66,15 @@ const LoginForm = () => {
       } catch (err) {
         if (err.response) {
           if (err.response.status === 403) {
-            setShowError(true);
+            setShowError("Incorrect password");
+          } else if (err.response.status === 404) {
+            setShowError(err.response.data.message);
+          } else {
+            console.log(err.response.data);
+            console.log(err.response.status);
+            console.log(err.response.headers);
+            setSystemError("register");
           }
-          console.log(err.response.data);
-          console.log(err.response.status);
-          console.log(err.response.headers);
         } else {
           console.log(`Error: ${err.message}`);
         }
@@ -80,9 +85,8 @@ const LoginForm = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     var check;
-    console.log(invalid);
     check = checkSignup();
-
+    setInvalid(null);
     if (check) {
       register();
     }
@@ -90,7 +94,6 @@ const LoginForm = () => {
 
   const register = async () => {
     try {
-      console.log("ovde");
       const response = await api.post("/register", signupData);
       const userData = {
         id: response.data.user.id,
@@ -107,12 +110,12 @@ const LoginForm = () => {
       navigate("/");
     } catch (err) {
       if (err.response) {
-        console.log(err.response.data.error);
+        console.log(err.response.data);
         if (err.response.status === 400) {
-          setInvalid(true);
-          console.log("je li");
+          setInvalid(err.response.data.message);
         } else {
-          setInvalid(false);
+          setInvalid(null);
+          setSystemError("register");
         }
         console.log(err.response.status);
         console.log(err.response.headers);
@@ -130,18 +133,19 @@ const LoginForm = () => {
       !signupData.password ||
       signupData.password === "" ||
       signupData.password.length < 8 ||
-      !!punctuationRegex.test(signupData.password)
+      !punctuationRegex.test(signupData.password)
     ) {
       setInvalidPassword(true);
-      c1 = true;
+      c1 = false;
     } else {
       setInvalidPassword(false);
-      c1 = false;
+      c1 = true;
     }
     c2 =
       signupData &&
       signupData.email &&
       signupData.email !== "" &&
+      signupData.email.includes("@") &&
       signupData.firstname &&
       signupData.firstname !== "" &&
       signupData.lastname &&
@@ -161,48 +165,6 @@ const LoginForm = () => {
       loginData.password !== ""
     );
   };
-
-  // const uniqueEmail = async () => {
-  //   try {
-  //     const response = await api.get("/owner/email/" + signupData.email);
-  //     if (response.data === true) {
-  //       setInvalidEmail(false);
-  //       return true;
-  //     } else {
-  //       setInvalidEmail(true);
-  //       return false;
-  //     }
-  //   } catch (err) {
-  //     if (err.response) {
-  //       console.log(err.response.data);
-  //       console.log(err.response.status);
-  //       console.log(err.response.headers);
-  //     } else {
-  //       console.log(`Error: ${err.message}`);
-  //     }
-  //   }
-  // };
-
-  // const uniqueUsername = async () => {
-  //   try {
-  //     const response = await api.get("/owner/username/" + signupData.username);
-  //     if (response.data === true) {
-  //       setInvalidUsername(false);
-  //       return true;
-  //     } else {
-  //       setInvalidUsername(true);
-  //       return false;
-  //     }
-  //   } catch (err) {
-  //     if (err.response) {
-  //       console.log(err.response.data);
-  //       console.log(err.response.status);
-  //       console.log(err.response.headers);
-  //     } else {
-  //       console.log(`Error: ${err.message}`);
-  //     }
-  //   }
-  // };
 
   const getInvalidPasswordMessage = () => {
     switch (true) {
@@ -254,11 +216,6 @@ const LoginForm = () => {
                     Email must contain '@'.
                   </label>
                 )}
-              {/* {flag && invalidEmail && (
-                <label style={{ textAlign: "center", color: "#882f29" }}>
-                  This email is already registered.
-                </label>
-              )} */}
             </div>
             <div className="field-login">
               <input
@@ -304,11 +261,6 @@ const LoginForm = () => {
                   Username is required.
                 </label>
               )}
-              {/* {flag && invalidUsername && (
-                <label style={{ textAlign: "center", color: "#882f29" }}>
-                  This username is already registered.
-                </label>
-              )} */}
             </div>
             <div className="field-login">
               <input
@@ -319,11 +271,6 @@ const LoginForm = () => {
                 className="input-custom"
                 onChange={handleSignupInputChange}
               />
-              {/* {flag && signupData.password === "" && (
-                <label style={{ textAlign: "center", color: "#882f29" }}>
-                  Password is required.
-                </label>
-              )} */}
               {flag && invalidPassword && (
                 <label style={{ textAlign: "center", color: "#882f29" }}>
                   {getInvalidPasswordMessage()}
@@ -346,8 +293,14 @@ const LoginForm = () => {
                   marginTop: 10,
                 }}
               >
-                Email or username not unique.
+                {invalid}
               </label>
+            )}
+            {systemError && systemError !== "" && (
+              <ErrorModal
+                message={`System cannot ${systemError} this user`}
+                onClose={() => setSystemError("")}
+              />
             )}
           </form>
         </div>
@@ -358,7 +311,7 @@ const LoginForm = () => {
               htmlFor="chk"
               aria-hidden="true"
               className="main-login-label"
-              style={{ margin: 0 }}
+              style={{ marginTop: 50 }}
             >
               Login
             </label>
@@ -391,11 +344,6 @@ const LoginForm = () => {
                   Password is required.
                 </label>
               )}
-              {showError && (
-                <label style={{ textAlign: "center" }}>
-                  Incorrect username or password.<br></br> Please try again.
-                </label>
-              )}
             </div>
             <button
               className="btn-login"
@@ -404,6 +352,17 @@ const LoginForm = () => {
             >
               Login
             </button>
+            {showError && (
+              <label
+                style={{
+                  textAlign: "center",
+                }}
+                className="lbl-error-login"
+              >
+                {showError}
+                <br></br> Please try again.
+              </label>
+            )}
           </form>
         </div>
       </div>
