@@ -5,8 +5,6 @@ import api from "../../api/Api";
 import { CPopover, CButton } from "@coreui/react";
 import { Link } from "react-router-dom";
 
-//TODO: handle that when a user thats not logged clicks heart it opens a pop up asking to login for liking pets
-
 const HeartButton = ({ like, unlike, pet }) => {
   const [isActive, setIsActive] = useState(false);
   const { user } = useContext(UserContext);

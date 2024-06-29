@@ -5,8 +5,7 @@ import AdoptionTable from "./MultiSelectTable";
 import MultiSelectTable from "./MultiSelectTable";
 import { Link } from "react-router-dom";
 import AdoptionModal from "./AdoptionModal";
-
-//TODO: max 6 pets can be adopted at a time
+import WarningModal from "../WarningModal";
 
 const AdoptionAdd = () => {
   const [selectedRows, setSelectedRows] = useState([]);
@@ -14,6 +13,7 @@ const AdoptionAdd = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPets, setSelectedPets] = useState([]);
+  const [warning, setWarning] = useState(false);
 
   useEffect(() => {
     const getPets = async () => {
@@ -49,11 +49,15 @@ const AdoptionAdd = () => {
   };
 
   const handleAdoptClick = () => {
-    const selectedPetsData = selectedRows.map((selectedId) =>
-      pets.find((pet) => pet.id == selectedId)
-    );
-    setSelectedPets(selectedPetsData);
-    setIsModalOpen(true);
+    if (selectedRows && selectedRows.length > 0) {
+      const selectedPetsData = selectedRows.map((selectedId) =>
+        pets.find((pet) => pet.id == selectedId)
+      );
+      setSelectedPets(selectedPetsData);
+      setIsModalOpen(true);
+    } else {
+      setWarning(true);
+    }
   };
 
   const closeModal = () => {
@@ -62,6 +66,12 @@ const AdoptionAdd = () => {
 
   return (
     <div className="view-all-page">
+      {warning && (
+        <WarningModal
+          message={"No pets selected"}
+          onClose={() => setWarning(false)}
+        />
+      )}
       <h2 className="title-tbl">NEW ADOPTION</h2>
       <MultiSelectTable
         onRowClick={handleRowClick}

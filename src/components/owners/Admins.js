@@ -9,6 +9,7 @@ import SuccessModal from "../Success modal";
 const Admins = () => {
   const [selectedRow, setSelectedRow] = useState(null);
   const [data, setData] = useState([]);
+  const [systemError, setSystemError] = useState(false);
 
   useEffect(() => {
     getAdmins();
@@ -24,7 +25,11 @@ const Admins = () => {
         lastname: owner.lastname,
       }));
       setData(formattedData);
+      if (!formattedData || formattedData.length === 0) {
+        setSystemError(true);
+      }
     } catch (err) {
+      setSystemError(true);
       if (err.response) {
         console.log(err.response.data);
         console.log(err.response.status);
@@ -48,6 +53,12 @@ const Admins = () => {
         data={data}
         fetchData={getAdmins}
       />
+      {systemError && (
+        <ErrorModal
+          message={"System could not load admins"}
+          onClose={() => setSystemError(false)}
+        />
+      )}
     </div>
   );
 };

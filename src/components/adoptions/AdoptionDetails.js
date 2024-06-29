@@ -6,9 +6,6 @@ import SuccessModal from "../Success modal";
 import ErrorModal from "../ErrorModal";
 import AreYouSure from "../AreYouSureModal";
 
-//TODO: if no row is selected do not let them open details
-//TODO: are you sure you want to delete this adoption?
-
 const AdoptionDetailsModal = ({ onClose, id }) => {
   const [adoption, setAdoption] = useState(null);
   const [petImages, setPetImages] = useState({});
@@ -16,10 +13,14 @@ const AdoptionDetailsModal = ({ onClose, id }) => {
   const [successDelete, setSuccessDelete] = useState(false);
   const [errorDelete, setErrorDelete] = useState(false);
   const [sure, setSure] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (id) {
       getAdoption();
+      setTimeout(() => {
+        setLoading(false);
+      }, 1300);
     }
   }, []);
 
@@ -82,7 +83,7 @@ const AdoptionDetailsModal = ({ onClose, id }) => {
       }
     };
     deleteAdoption();
-    onClose();
+    setSuccessDelete(true);
   };
 
   const hideSuccessDeleteModal = () => {
@@ -96,90 +97,94 @@ const AdoptionDetailsModal = ({ onClose, id }) => {
 
   return (
     <div className="modal-custom">
-      <div
-        className="modal-content-custom"
-        style={{
-          height: "fit-content",
-          width: "fit-content",
-          paddingRight: 20,
-          minWidth: 420,
-        }}
-      >
-        <div className="modal-header-custom" style={{ paddingBottom: 10 }}>
-          {adoption && (
-            <h2
-              style={{
-                color: "#5e1914",
-                textShadow: "2px 2px 4px rgba(0, 0, 0, 0.3)",
-                marginLeft: 18,
-              }}
-            >
-              Adoption #{adoption.id}
-            </h2>
-          )}
-          <button
-            type="button"
-            className="btn-close"
-            onClick={onClose}
-          ></button>
-        </div>
-        <div className="modal-body-custom">
-          <div className="adoption-field" style={{ flex: " 1 1" }}>
-            {adoption && (
-              <p>
-                <span>Owner:</span>{" "}
-                {`${adoption.owner.id}. ${adoption.owner.firstname} ${adoption.owner.lastname}`}
-              </p>
-            )}
-          </div>
-          <div className="adoption-field" style={{ flex: " 1 1" }}>
-            {adoption && (
-              <p>
-                <span>Date:</span> {`${adoption.date}`}
-              </p>
-            )}
-          </div>
-          <div className="adoption-field" style={{ flex: " 1 1" }}>
-            {adoption && (
-              <p>
-                <span>Admin:</span> {`${adoption.admin.username}`}
-              </p>
-            )}
-          </div>
-          <div style={{ justifyContent: "center" }}></div>
-          {pets && (
-            <div className="pet-part" style={{ padding: 0 }}>
-              {Array.from(pets).map((pet) => (
-                <PetCardAd key={pet.id} pet={pet} image={petImages[pet.id]} />
-              ))}
-            </div>
-          )}
-        </div>
+      {loading ? (
+        <div className="loader" style={{ color: "#ebe9e9" }}></div>
+      ) : (
         <div
-          className="modal-footer-custom"
+          className="modal-content-custom"
           style={{
-            display: "flex",
-            justifyContent: "flex-end",
             height: "fit-content",
-            margin: 0,
+            width: "fit-content",
+            paddingRight: 20,
+            minWidth: 420,
           }}
         >
-          <button
-            className="btn btn-primary btn-adopt btn-owner-details"
-            onClick={() => setSure(true)}
+          <div className="modal-header-custom" style={{ paddingBottom: 10 }}>
+            {adoption && (
+              <h2
+                style={{
+                  color: "#5e1914",
+                  textShadow: "2px 2px 4px rgba(0, 0, 0, 0.3)",
+                  marginLeft: 18,
+                }}
+              >
+                Adoption #{adoption.id}
+              </h2>
+            )}
+            <button
+              type="button"
+              className="btn-close"
+              onClick={onClose}
+            ></button>
+          </div>
+          <div className="modal-body-custom">
+            <div className="adoption-field" style={{ flex: " 1 1" }}>
+              {adoption && (
+                <p>
+                  <span>Owner:</span>{" "}
+                  {`${adoption.owner.id}. ${adoption.owner.firstname} ${adoption.owner.lastname}`}
+                </p>
+              )}
+            </div>
+            <div className="adoption-field" style={{ flex: " 1 1" }}>
+              {adoption && (
+                <p>
+                  <span>Date:</span> {`${adoption.date}`}
+                </p>
+              )}
+            </div>
+            <div className="adoption-field" style={{ flex: " 1 1" }}>
+              {adoption && (
+                <p>
+                  <span>Admin:</span> {`${adoption.admin.username}`}
+                </p>
+              )}
+            </div>
+            <div style={{ justifyContent: "center" }}></div>
+            {pets && (
+              <div className="pet-part" style={{ padding: 0 }}>
+                {Array.from(pets).map((pet) => (
+                  <PetCardAd key={pet.id} pet={pet} image={petImages[pet.id]} />
+                ))}
+              </div>
+            )}
+          </div>
+          <div
+            className="modal-footer-custom"
             style={{
-              width: "100px",
-              marginRight: 10,
-              marginTop: 0,
-              marginBottom: 15,
-              fontWeight: 550,
-              fontSize: 18,
+              display: "flex",
+              justifyContent: "flex-end",
+              height: "fit-content",
+              margin: 0,
             }}
           >
-            Delete
-          </button>
+            <button
+              className="btn btn-primary btn-adopt btn-owner-details"
+              onClick={() => setSure(true)}
+              style={{
+                width: "100px",
+                marginRight: 10,
+                marginTop: 0,
+                marginBottom: 15,
+                fontWeight: 550,
+                fontSize: 18,
+              }}
+            >
+              Delete
+            </button>
+          </div>
         </div>
-      </div>
+      )}
       {successDelete && (
         <div className="success">
           <SuccessModal

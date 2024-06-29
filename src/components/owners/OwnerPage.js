@@ -3,13 +3,14 @@ import TableCustom from "./Table";
 import { useState, useEffect } from "react";
 import api from "../../api/Api";
 import WarningModal from "../WarningModal";
+import ErrorModal from "../ErrorModal";
 
 const OwnerPage = () => {
-  //TODO:  kad ne selektuje nijedan owner da izadje obavestenje hej nisi selektovao nista!!!
-
   const [selectedRow, setSelectedRow] = useState(null);
   const [data, setData] = useState([]);
   const [warning, setWarning] = useState(false);
+  const[systemError, setSystemError] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,7 +24,11 @@ const OwnerPage = () => {
           lastname: owner.lastname,
         }));
         setData(formattedData);
+        if(!formattedData || formattedData.length === 0){
+          setSystemError(true);
+        }
       } catch (err) {
+        setSystemError(true);
         if (err.response) {
           console.log(err.response.data);
           console.log(err.response.status);
@@ -78,6 +83,12 @@ const OwnerPage = () => {
         <WarningModal
           message={"No owner selected"}
           onClose={() => setWarning(false)}
+        />
+      )}
+        {systemError && (
+        <ErrorModal
+          message={"System could not load admins"}
+          onClose={() => setSystemError(false)}
         />
       )}
     </div>

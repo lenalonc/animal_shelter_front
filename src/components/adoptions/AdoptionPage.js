@@ -4,8 +4,7 @@ import { Link } from "react-router-dom";
 import api from "../../api/Api";
 import AdoptionDetailsModal from "./AdoptionDetails";
 import WarningModal from "../WarningModal";
-
-//TODO: proveri ovde pozive nesto je cudnoo pisalo je za useEffect data da trigeruje a data unutar getAdoption pa se beskonacno poziva
+import ErrorModal from "../ErrorModal";
 
 const AdoptionPage = () => {
   const [selectedRow, setSelectedRow] = useState(null);
@@ -13,6 +12,7 @@ const AdoptionPage = () => {
   const [formattedData, setFormattedData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [warning, setWarning] = useState(false);
+  const [systemError, setSystemError] = useState(false);
 
   const getAdoptions = async () => {
     try {
@@ -25,7 +25,11 @@ const AdoptionPage = () => {
         pets: adoption.pets.length,
       }));
       setFormattedData(formattedData);
+      if (!formattedData || formattedData.length === 0) {
+        setSystemError(true);
+      }
     } catch (err) {
+      setSystemError(true);
       if (err.response) {
         console.log(err.response.data);
         console.log(err.response.status);
@@ -74,6 +78,12 @@ const AdoptionPage = () => {
         <WarningModal
           message={"No adoption selected"}
           onClose={() => setWarning(false)}
+        />
+      )}
+      {systemError && (
+        <ErrorModal
+          message={"System could not load adoptions"}
+          onClose={() => setSystemError(false)}
         />
       )}
       <div className="buttons-container">

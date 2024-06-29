@@ -90,7 +90,9 @@ const AdoptionModal = ({ onClose, chosenPets }) => {
         setError(true);
       }
     };
-    createAdoption();
+    if (chosenOwner) {
+      createAdoption();
+    }
   };
 
   const hideSuccessModal = () => {
@@ -124,6 +126,7 @@ const AdoptionModal = ({ onClose, chosenPets }) => {
               label={"fullname"}
               onChange={handleOwnerChange}
               width={"300px"}
+              error={!chosenOwner}
             />
             {chosenPets.length > 0 && (
               <div className="pet-part">
@@ -159,7 +162,7 @@ const AdoptionModal = ({ onClose, chosenPets }) => {
       {error && (
         <div className="success">
           <ErrorModal
-            message={"Could not delete adoption"}
+            message={"System could not delete adoption"}
             onClose={hideErrorModal}
           />
         </div>

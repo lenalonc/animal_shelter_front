@@ -53,7 +53,8 @@ const EditPetModal = ({ onClose, pet, setDeleted, refresh, img }) => {
       if (picture) {
         savePictureLocally(picture);
       }
-      setShowSuccessModal(true);
+      // setShowSuccessModal(true);
+      setShowErrorModal(true);
       refresh();
     } catch (err) {
       if (err.response) {
@@ -64,6 +65,7 @@ const EditPetModal = ({ onClose, pet, setDeleted, refresh, img }) => {
         console.log(`Error: ${err.message}`);
         setShowErrorModal(true);
       }
+      setShowErrorModal(true);
     }
   };
 
@@ -604,7 +606,7 @@ const EditPetModal = ({ onClose, pet, setDeleted, refresh, img }) => {
         {showErrorModal && (
           <div className="no-changes">
             <ErrorModal
-              message={"Could not update pets"}
+              message={"System could not update pet"}
               onClose={hideErrorModal}
             />
           </div>
@@ -620,7 +622,7 @@ const EditPetModal = ({ onClose, pet, setDeleted, refresh, img }) => {
         {ErrorDeleteModal && (
           <div className="no-changes">
             <ErrorModal
-              message={"Could not delete pet"}
+              message={"System could not delete pet"}
               onClose={hideErrorDeleteModal}
             />
           </div>
