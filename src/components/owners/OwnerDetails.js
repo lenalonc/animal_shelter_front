@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../../api/Api";
 import SuccessModal from "../Success modal";
 import ErrorModal from "../ErrorModal";
 import AreYouSure from "../AreYouSureModal";
 import WarningModal from "../WarningModal";
+import { UserContext } from "../context/UserContext";
 
 //TODO: if the owner has adoptions he cant become an admin
 
@@ -34,6 +35,7 @@ const OwnerDetails = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [originalOwner, setOriginalOwner] = useState();
 
+
   useEffect(() => {
     const getOwner = async () => {
       try {
@@ -58,6 +60,7 @@ const OwnerDetails = () => {
       setLoading(false);
     }, 1300);
   }, [id]);
+  
 
   const handleEditClick = () => {
     setIsEditing(true);

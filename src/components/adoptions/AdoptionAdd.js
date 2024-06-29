@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import api from "../../api/Api";
 import TableCustom from "../owners/Table";
 import AdoptionTable from "./MultiSelectTable";
 import MultiSelectTable from "./MultiSelectTable";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AdoptionModal from "./AdoptionModal";
 import WarningModal from "../WarningModal";
+import { UserContext } from "../context/UserContext";
 
 const AdoptionAdd = () => {
   const [selectedRows, setSelectedRows] = useState([]);
@@ -14,6 +15,15 @@ const AdoptionAdd = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPets, setSelectedPets] = useState([]);
   const [warning, setWarning] = useState(false);
+  const { user } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user.role !== "admin") {
+      navigate("/notfound");
+    }
+  }, [user]);
+
 
   useEffect(() => {
     const getPets = async () => {

@@ -1,10 +1,11 @@
 import TableCustom from "../owners/Table";
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../../api/Api";
 import AdoptionDetailsModal from "./AdoptionDetails";
 import WarningModal from "../WarningModal";
 import ErrorModal from "../ErrorModal";
+import { UserContext } from "../context/UserContext";
 
 const AdoptionPage = () => {
   const [selectedRow, setSelectedRow] = useState(null);
@@ -13,6 +14,8 @@ const AdoptionPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [warning, setWarning] = useState(false);
   const [systemError, setSystemError] = useState(false);
+  const { user } = useContext(UserContext);
+  const navigate = useNavigate();
 
   const getAdoptions = async () => {
     try {
@@ -39,6 +42,12 @@ const AdoptionPage = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (user.role !== "admin") {
+      navigate("/notfound");
+    }
+  }, [user]);
 
   useEffect(() => {
     getAdoptions();

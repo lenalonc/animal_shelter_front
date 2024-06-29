@@ -1,9 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
 import slika from "../../img/addOwner.jpg";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import api from "../../api/Api";
 import SuccessModal from "../Success modal";
 import ErrorModal from "../ErrorModal";
+import { UserContext } from "../context/UserContext";
 
 const OwnerAdd = () => {
   const [fields, setFields] = useState([]);
@@ -20,6 +21,14 @@ const OwnerAdd = () => {
   const [flag, setFlag] = useState(false);
   const [showError, setShowError] = useState(false);
   const [loading, setLoading] = useState(true);
+  const { user } = useContext(UserContext);
+
+  useEffect(() => {
+    if (user.role !== "admin") {
+      navigate("/notfound");
+    }
+  }, [user]);
+
 
   useEffect(() => {
     const getFields = async () => {

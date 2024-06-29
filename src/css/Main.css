@@ -361,3 +361,9 @@
     clip-path: inset(0 -50px 0 0); /* Adjusted to match the new width */
   }
 }
+
+.lottie-container {
+  width: 37%; 
+  height: auto; 
+  margin: 0 auto;
+}

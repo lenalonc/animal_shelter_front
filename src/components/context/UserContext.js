@@ -12,7 +12,10 @@ export const UserContextProvider = ({ children }) => {
     token: "",
   };
 
-  const [user, setUser] = useState(initialUserState);
+  const [user, setUser] = useState(() => {
+    const storedUserData = localStorage.getItem("user");
+    return storedUserData ? JSON.parse(storedUserData) : initialUserState;
+  });
   const logoutTimeoutRef = useRef(null);
 
   const resetUser = () => {

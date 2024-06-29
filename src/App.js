@@ -31,6 +31,7 @@ import { UserContextProvider } from "./components/context/UserContext";
 import PetAdoptedDetails from "./components/pets/AdoptedPetDetails";
 import LikedPets from "./components/pets/LikedPets";
 import Admins from "./components/owners/Admins";
+import NotFoundPage from "./components/NotFoundPage";
 
 function App() {
   return (
@@ -56,7 +57,7 @@ function App() {
             <Route path="pets/adopted" element={<PetsAdopted />} />
             <Route path={"pets/adopted/:id"} element={<PetAdoptedDetails />} />
             <Route path={"pets/liked"} element={<LikedPets />} />
-            <Route path="*" element={<div>404 Not Found</div>} />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <Footer />
         </div>

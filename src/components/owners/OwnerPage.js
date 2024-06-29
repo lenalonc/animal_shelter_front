@@ -1,16 +1,17 @@
 import { Link, useNavigate } from "react-router-dom";
 import TableCustom from "./Table";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import api from "../../api/Api";
 import WarningModal from "../WarningModal";
 import ErrorModal from "../ErrorModal";
+import { UserContext } from "../context/UserContext";
 
 const OwnerPage = () => {
   const [selectedRow, setSelectedRow] = useState(null);
   const [data, setData] = useState([]);
   const [warning, setWarning] = useState(false);
-  const[systemError, setSystemError] = useState(false);
-
+  const [systemError, setSystemError] = useState(false);
+  const { user } = useContext(UserContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,7 +25,7 @@ const OwnerPage = () => {
           lastname: owner.lastname,
         }));
         setData(formattedData);
-        if(!formattedData || formattedData.length === 0){
+        if (!formattedData || formattedData.length === 0) {
           setSystemError(true);
         }
       } catch (err) {
@@ -40,6 +41,12 @@ const OwnerPage = () => {
     };
     getOwners();
   }, []);
+
+  useEffect(() => {
+    if (user.role !== "admin") {
+      navigate("/notfound");
+    }
+  }, [user]);
 
   const handleRowClick = (id) => {
     setSelectedRow((prevSelectedRow) => (prevSelectedRow === id ? null : id));
@@ -85,7 +92,7 @@ const OwnerPage = () => {
           onClose={() => setWarning(false)}
         />
       )}
-        {systemError && (
+      {systemError && (
         <ErrorModal
           message={"System could not load admins"}
           onClose={() => setSystemError(false)}
