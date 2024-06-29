@@ -5,10 +5,6 @@ import api from "../../api/Api";
 import SuccessModal from "../Success modal";
 import ErrorModal from "../ErrorModal";
 
-//TODO: two password input fields and check if they match before sending the data
-//TODO: Success modal when new owner is created
-//TODO: Validation checks
-
 const OwnerAdd = () => {
   const [fields, setFields] = useState([]);
   const [owner, setOwner] = useState({
@@ -23,6 +19,7 @@ const OwnerAdd = () => {
   const navigate = useNavigate();
   const [flag, setFlag] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getFields = async () => {
@@ -39,8 +36,10 @@ const OwnerAdd = () => {
         }
       }
     };
-
     getFields();
+    setTimeout(() => {
+      setLoading(false);
+    }, 1500);
   }, []);
 
   const handleInputChange = (e) => {
@@ -116,90 +115,100 @@ const OwnerAdd = () => {
   };
 
   return (
-    <div className="owner-add-page">
-      <div className="owner-add-form">
-        <div className="form-container-add-owner">
-          <div className="form-left-add-owner">
-            <h2
-              style={{
-                marginBottom: 30,
-                color: "#8a251d",
-                fontSize: 40,
-                textShadow: "2px 2px 4px rgba(0, 0, 0, 0.3)",
-                fontWeight: 600,
-              }}
-            >
-              ADD PET OWNER
-            </h2>
-            <form>
-              {fields.map((field, index) => (
-                <div className="form-group-add-owner" key={index}>
-                  <label htmlFor={field} className="label-add-owner">
-                    {capitalizeFirstLetter(
-                      field === "dateOfBirth" ? "Date of birth" : field
-                    )}
-                    :
-                  </label>
-                  <input
-                    type={
-                      field === "password"
-                        ? "password"
-                        : field === "dateOfBirth"
-                        ? "date"
-                        : "text"
-                    }
-                    id={field}
-                    name={field}
-                    className="input-add-owner"
-                    required
-                    onFocus={handleInputFocus}
-                    onBlur={handleInputBlur}
-                    onChange={handleInputChange}
-                    defaultValue={field === "dateOfBirth" ? "2000-01-01" : ""}
-                    style={{
-                      border:
-                        flag && owner[field] === "" ? "2px solid #8a251d" : "",
-                    }}
-                  />
-                </div>
-              ))}
-              {showError && (
-                <label
-                  style={{ textAlign: "center" }}
-                  className="error-owner-add"
+    <div className="owner-add-page" style={{minHeight: "80vh"}}>
+      {loading ? (
+        <div className="loader"></div>
+      ) : (
+        <div>
+          <div className="owner-add-form">
+            <div className="form-container-add-owner">
+              <div className="form-left-add-owner">
+                <h2
+                  style={{
+                    marginBottom: 30,
+                    color: "#8a251d",
+                    fontSize: 40,
+                    textShadow: "2px 2px 4px rgba(0, 0, 0, 0.3)",
+                    fontWeight: 600,
+                  }}
                 >
-                  Username or email is already registered.
-                </label>
-              )}
-              <div className="add-owner-btncontainer">
-                <button
-                  type="submit"
-                  className="btn btn-primary btn-adopt btn-add-owner"
-                  onClick={handleSave}
-                >
-                  SAVE
-                </button>
-                <Link to="/owners">
-                  <button
-                    type="button"
-                    className="btn btn-primary btn-adopt btn-add-owner"
-                    style={{ marginLeft: 30 }}
-                  >
-                    VIEW ALL
-                  </button>
-                </Link>
+                  ADD PET OWNER
+                </h2>
+                <form>
+                  {fields.map((field, index) => (
+                    <div className="form-group-add-owner" key={index}>
+                      <label htmlFor={field} className="label-add-owner">
+                        {capitalizeFirstLetter(
+                          field === "dateOfBirth" ? "Date of birth" : field
+                        )}
+                        :
+                      </label>
+                      <input
+                        type={
+                          field === "password"
+                            ? "password"
+                            : field === "dateOfBirth"
+                            ? "date"
+                            : "text"
+                        }
+                        id={field}
+                        name={field}
+                        className="input-add-owner"
+                        required
+                        onFocus={handleInputFocus}
+                        onBlur={handleInputBlur}
+                        onChange={handleInputChange}
+                        defaultValue={
+                          field === "dateOfBirth" ? "2000-01-01" : ""
+                        }
+                        style={{
+                          border:
+                            flag && owner[field] === ""
+                              ? "2px solid #8a251d"
+                              : "",
+                        }}
+                      />
+                    </div>
+                  ))}
+                  {showError && (
+                    <label
+                      style={{ textAlign: "center" }}
+                      className="error-owner-add"
+                    >
+                      Username or email is already registered.
+                    </label>
+                  )}
+                  <div className="add-owner-btncontainer">
+                    <button
+                      type="submit"
+                      className="btn btn-primary btn-adopt btn-add-owner"
+                      onClick={handleSave}
+                    >
+                      SAVE
+                    </button>
+                    <Link to="/owners">
+                      <button
+                        type="button"
+                        className="btn btn-primary btn-adopt btn-add-owner"
+                        style={{ marginLeft: 30 }}
+                      >
+                        VIEW ALL
+                      </button>
+                    </Link>
+                  </div>
+                </form>
               </div>
-            </form>
-          </div>
-          <div className="form-right-add-owner">
-            <img
-              src={slika}
-              alt="add owner form"
-              className="form-image-add-owner"
-            />
+              <div className="form-right-add-owner">
+                <img
+                  src={slika}
+                  alt="add owner form"
+                  className="form-image-add-owner"
+                />
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
       {success && (
         <div className="success">
           <SuccessModal

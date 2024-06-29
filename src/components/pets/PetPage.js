@@ -3,10 +3,12 @@ import api from "../../api/Api";
 import PetCard from "./PetCard";
 import SelectionBox from "./SelectionPetPage";
 import { useLocation, useNavigate } from "react-router-dom";
+import ErrorModal from "../ErrorModal";
 
 const PetPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const [noPets, setNoPets] = useState(false);
 
   const queryParams = new URLSearchParams(location.search);
   const selectedValueFromURL = queryParams.get("type") || "All";
@@ -15,6 +17,7 @@ const PetPage = () => {
   const [petImages, setPetImages] = useState({});
   const [isOpen, setIsOpen] = useState(false);
   const [selectedValue, setSelectedValue] = useState(selectedValueFromURL);
+  const [loading, setLoading] = useState(true);
 
   const handleOptionClick = (value) => {
     setSelectedValue(value);
@@ -33,28 +36,33 @@ const PetPage = () => {
   }, [selectedValueFromURL]);
 
   useEffect(() => {
-    const getPets = async () => {
-      try {
-        const response = await api.get("/pet");
-        let filteredPets = response.data;
+    setTimeout(() => {
+      const getPets = async () => {
+        try {
+          const response = await api.get("/pet");
+          let filteredPets = response.data;
 
-        if (selectedValue !== "All") {
-          filteredPets = filteredPets.filter((pet) => {
-            if (selectedValue === "Dogs") {
-              return pet.animal.type === "DOG";
-            } else if (selectedValue === "Cats") {
-              return pet.animal.type === "CAT";
-            }
-          });
+          if (selectedValue !== "All") {
+            filteredPets = filteredPets.filter((pet) => {
+              if (selectedValue === "Dogs") {
+                return pet.animal.type === "DOG";
+              } else if (selectedValue === "Cats") {
+                return pet.animal.type === "CAT";
+              }
+            });
+          }
+          setPets(filteredPets);
+          loadPetImages(filteredPets);
+          if(!filteredPets || filteredPets.length === 0 ){
+            setNoPets(true);
+          }
+        } catch (err) {
+          console.log(`Error: ${err.message}`);
         }
-
-        setPets(filteredPets);
-        loadPetImages(filteredPets);
-      } catch (err) {
-        console.log(`Error: ${err.message}`);
-      }
-    };
-    getPets();
+      };
+      getPets();
+      setLoading(false);
+    }, 1000);
   }, [selectedValue]);
 
   const loadPetImages = async (pets) => {
@@ -78,6 +86,7 @@ const PetPage = () => {
 
   return (
     <div className="see-pets">
+      {loading && <div className="loader"></div>}
       <div className="select-segment" style={{ margin: "30px 80px 0px 60px" }}>
         <SelectionBox
           label={selectedValue === "All" ? "All" : selectedValue}
@@ -90,6 +99,7 @@ const PetPage = () => {
           <PetCard key={pet.id} pet={pet} image={petImages[pet.id]} />
         ))}
       </div>
+      {noPets && <ErrorModal message={"System could not load the pets"} onClose={()=>setNoPets(false)}/>}
     </div>
   );
 };

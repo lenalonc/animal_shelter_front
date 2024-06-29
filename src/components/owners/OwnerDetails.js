@@ -6,6 +6,8 @@ import ErrorModal from "../ErrorModal";
 import AreYouSure from "../AreYouSureModal";
 import WarningModal from "../WarningModal";
 
+//TODO: if the owner has adoptions he cant become an admin
+
 const OwnerDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -16,6 +18,8 @@ const OwnerDetails = () => {
   const [sure, setSure] = useState(false);
   const [showNoChangesModal, setShowNoChangesModal] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [systemError, setSystemError] = useState(false);
 
   const [owner, setOwner] = useState({
     id: "",
@@ -35,9 +39,11 @@ const OwnerDetails = () => {
       try {
         const response = await api.get("/owner/" + id);
         setOwner(response.data);
+        console.log(response.data);
         setOriginalOwner(response.data);
         setOriginalRole(response.data.role);
       } catch (err) {
+        setSystemError(true);
         if (err.response) {
           console.log(err.response.data);
           console.log(err.response.status);
@@ -48,6 +54,9 @@ const OwnerDetails = () => {
       }
     };
     getOwner();
+    setTimeout(() => {
+      setLoading(false);
+    }, 1300);
   }, [id]);
 
   const handleEditClick = () => {
@@ -78,10 +87,18 @@ const OwnerDetails = () => {
   };
 
   const handleSaveClick = async () => {
-    if (originalOwner === owner) {
+    if (
+      originalOwner === owner ||
+      (owner.firstname === originalOwner.firstname &&
+        owner.lastname === originalOwner.lastname &&
+        owner.email === originalOwner.email &&
+        owner.username === originalOwner.username &&
+        owner.role === originalOwner.role)
+    ) {
       setShowNoChangesModal(true);
       return;
     }
+
     if (checkData()) {
       try {
         const response = await api.put("/owner/" + id, owner);
@@ -131,11 +148,7 @@ const OwnerDetails = () => {
 
   const hideSuccessModal = () => {
     setSuccess(false);
-    if (owner.role === "customer") {
-      navigate("/owners");
-    } else {
-      navigate("/admins");
-    }
+    navigate("/owners");
   };
 
   const hideErrorModal = () => {
@@ -161,7 +174,8 @@ const OwnerDetails = () => {
       owner.email &&
       owner.email !== "" &&
       owner.username &&
-      owner.username !== ""
+      owner.username !== "" &&
+      owner.role
     );
   };
 
@@ -170,102 +184,114 @@ const OwnerDetails = () => {
     setOwner(originalOwner);
   };
 
-  return (
-    <div className="owner-details-page">
-      <div className="owner-details">
-        <div className="owner-details-header">
-          <h2>Owner Details</h2>
-        </div>
-        <div className="owner-details-content">
-          <div style={{ display: "flex", alignItems: "baseline" }}>
-            <label
-              style={{
-                marginRight: 35,
-                fontSize: 17,
-                fontWeight: 500,
-                color: "#450c08",
-              }}
-            >
-              Make admin:
-            </label>
-            <p className="onoff">
-              <input
-                type="checkbox"
-                value="1"
-                id="checkboxID"
-                style={{ color: "white" }}
-                onChange={handleCheckboxChange}
-                checked={owner.role === "admin"}
-                disabled={!isEditing}
-              />
-              <label htmlFor="checkboxID" style={{ color: "white" }}></label>
-            </p>
-          </div>
+  const goBack = () => {
+    setSystemError(false);
+    navigate("/owners");
+  };
 
-          {Object.keys(owner).map((key) => {
-            if (key !== "adoptions" && key !== "id" && key !== "role") {
-              return (
-                <div className="field-owner-details" key={key}>
-                  <label>{capitalizeFirstLetter(key)}:</label>
-                  <input
-                    type="text"
-                    name={key}
-                    value={owner[key]}
-                    onChange={isEditing ? handleInputChange : null}
-                    disabled={!isEditing}
-                    style={{
-                      width: 300,
-                      marginLeft: 10,
-                      border: owner[key] === "" ? "2px solid #8a251d" : "",
-                    }}
-                  />
-                </div>
-              );
-            }
-            return null;
-          })}
-          {showError && (
-            <label style={{ textAlign: "center" }} className="error-owner-add">
-              Username or email is already registered.
-            </label>
-          )}
-          <div className="buttons-owner-details">
-            {isEditing ? (
-              <>
-                <button
-                  className="btn btn-primary btn-adopt btn-owner-details"
-                  style={{ marginRight: 120, marginLeft: 0, width: 95 }}
-                  onClick={handleCancel}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="btn btn-primary btn-adopt btn-owner-details"
-                  onClick={() => setSure(true)}
-                  style={{ marginLeft: "auto", marginRight: 20, width: 90 }}
-                >
-                  Delete
-                </button>
-                <button
-                  className="btn btn-primary btn-adopt btn-owner-details"
-                  onClick={handleSaveClick}
-                  style={{ marginLeft: "auto", width: "80px" }}
-                >
-                  Save
-                </button>
-              </>
-            ) : (
-              <button
-                className="btn btn-primary btn-adopt btn-owner-details"
-                onClick={handleEditClick}
-                style={{ width: "100px" }}
+  return (
+    <div className="owner-details-page" style={{ minHeight: "80vh" }}>
+      {loading ? (
+        <div className="loader" style={{ color: "#5e1914" }}></div>
+      ) : (
+        <div className="owner-details">
+          <div className="owner-details-header">
+            <h2>Owner Details</h2>
+          </div>
+          <div className="owner-details-content">
+            <div style={{ display: "flex", alignItems: "baseline" }}>
+              <label
+                style={{
+                  marginRight: 35,
+                  fontSize: 17,
+                  fontWeight: 500,
+                  color: "#450c08",
+                }}
               >
-                Edit
-              </button>
+                Make admin:
+              </label>
+              <p className="onoff">
+                <input
+                  type="checkbox"
+                  value="1"
+                  id="checkboxID"
+                  style={{ color: "white" }}
+                  onChange={handleCheckboxChange}
+                  checked={owner.role === "admin"}
+                  disabled={!isEditing}
+                />
+                <label htmlFor="checkboxID" style={{ color: "white" }}></label>
+              </p>
+            </div>
+
+            {Object.keys(owner).map((key) => {
+              if (key !== "adoptions" && key !== "id" && key !== "role") {
+                return (
+                  <div className="field-owner-details" key={key}>
+                    <label>{capitalizeFirstLetter(key)}:</label>
+                    <input
+                      type="text"
+                      name={key}
+                      value={owner[key]}
+                      onChange={isEditing ? handleInputChange : null}
+                      disabled={!isEditing}
+                      style={{
+                        width: 300,
+                        marginLeft: 10,
+                        border: owner[key] === "" ? "2px solid #8a251d" : "",
+                      }}
+                    />
+                  </div>
+                );
+              }
+              return null;
+            })}
+            {showError && (
+              <label
+                style={{ textAlign: "center" }}
+                className="error-owner-add"
+              >
+                Username or email is already registered.
+              </label>
             )}
+            <div className="buttons-owner-details">
+              {isEditing ? (
+                <>
+                  <button
+                    className="btn btn-primary btn-adopt btn-owner-details"
+                    style={{ marginRight: 120, marginLeft: 0, width: 95 }}
+                    onClick={handleCancel}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="btn btn-primary btn-adopt btn-owner-details"
+                    onClick={() => setSure(true)}
+                    style={{ marginLeft: "auto", marginRight: 20, width: 90 }}
+                  >
+                    Delete
+                  </button>
+                  <button
+                    className="btn btn-primary btn-adopt btn-owner-details"
+                    onClick={handleSaveClick}
+                    style={{ marginLeft: "auto", width: "80px" }}
+                  >
+                    Save
+                  </button>
+                </>
+              ) : (
+                <button
+                  className="btn btn-primary btn-adopt btn-owner-details"
+                  onClick={handleEditClick}
+                  style={{ width: "100px" }}
+                >
+                  Edit
+                </button>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
       {success && (
         <div className="success">
           <SuccessModal
@@ -278,7 +304,7 @@ const OwnerDetails = () => {
       {error && (
         <div className="success">
           <ErrorModal
-            message={"Could not update owner"}
+            message={"System could not update owner"}
             onClose={hideErrorModal}
           />
         </div>
@@ -296,7 +322,7 @@ const OwnerDetails = () => {
       {errorDelete && (
         <div className="success">
           <ErrorModal
-            message={"Could not delete owner"}
+            message={"System could not delete owner"}
             onClose={hideErrorDeleteModal}
           />
         </div>
@@ -317,6 +343,9 @@ const OwnerDetails = () => {
           onClose={() => setSure(false)}
           deletePet={handleDelete}
         />
+      )}
+      {systemError && (
+        <ErrorModal message={"System could not load owner"} onClose={goBack} />
       )}
     </div>
   );
