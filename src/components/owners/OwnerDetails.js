@@ -7,8 +7,6 @@ import AreYouSure from "../AreYouSureModal";
 import WarningModal from "../WarningModal";
 import { UserContext } from "../context/UserContext";
 
-//TODO: if the owner has adoptions he cant become an admin
-
 const OwnerDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -21,6 +19,7 @@ const OwnerDetails = () => {
   const [showError, setShowError] = useState(false);
   const [loading, setLoading] = useState(true);
   const [systemError, setSystemError] = useState(false);
+  const {user} = useContext(UserContext);
 
   const [owner, setOwner] = useState({
     id: "",
@@ -31,10 +30,16 @@ const OwnerDetails = () => {
     role: "customer",
   });
 
+  useEffect(() => {
+    if (user.role !== "admin") {
+      navigate("/notfound");
+    }
+  }, [user]);
+
   const [originalRole, setOriginalRole] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [originalOwner, setOriginalOwner] = useState();
-
+  const [hasAdoptions, setHasAdoptions] = useState(false);
 
   useEffect(() => {
     const getOwner = async () => {
@@ -44,6 +49,9 @@ const OwnerDetails = () => {
         console.log(response.data);
         setOriginalOwner(response.data);
         setOriginalRole(response.data.role);
+        if (response.data.adoptions && response.data.adoptions.length > 0) {
+          setHasAdoptions(true);
+        }
       } catch (err) {
         setSystemError(true);
         if (err.response) {
@@ -60,7 +68,6 @@ const OwnerDetails = () => {
       setLoading(false);
     }, 1300);
   }, [id]);
-  
 
   const handleEditClick = () => {
     setIsEditing(true);
@@ -202,30 +209,35 @@ const OwnerDetails = () => {
             <h2>Owner Details</h2>
           </div>
           <div className="owner-details-content">
-            <div style={{ display: "flex", alignItems: "baseline" }}>
-              <label
-                style={{
-                  marginRight: 35,
-                  fontSize: 17,
-                  fontWeight: 500,
-                  color: "#450c08",
-                }}
-              >
-                Make admin:
-              </label>
-              <p className="onoff">
-                <input
-                  type="checkbox"
-                  value="1"
-                  id="checkboxID"
-                  style={{ color: "white" }}
-                  onChange={handleCheckboxChange}
-                  checked={owner.role === "admin"}
-                  disabled={!isEditing}
-                />
-                <label htmlFor="checkboxID" style={{ color: "white" }}></label>
-              </p>
-            </div>
+            {!hasAdoptions && (
+              <div style={{ display: "flex", alignItems: "baseline" }}>
+                <label
+                  style={{
+                    marginRight: 35,
+                    fontSize: 17,
+                    fontWeight: 500,
+                    color: "#450c08",
+                  }}
+                >
+                  Make admin:
+                </label>
+                <p className="onoff">
+                  <input
+                    type="checkbox"
+                    value="1"
+                    id="checkboxID"
+                    style={{ color: "white" }}
+                    onChange={handleCheckboxChange}
+                    checked={owner.role === "admin"}
+                    disabled={!isEditing}
+                  />
+                  <label
+                    htmlFor="checkboxID"
+                    style={{ color: "white" }}
+                  ></label>
+                </p>
+              </div>
+            )}
 
             {Object.keys(owner).map((key) => {
               if (key !== "adoptions" && key !== "id" && key !== "role") {

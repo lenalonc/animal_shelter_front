@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AdoptionModal from "./AdoptionModal";
 import api from "../../api/Api";
 import PetCardAd from "./PetCardAdoption";
 import SuccessModal from "../Success modal";
 import ErrorModal from "../ErrorModal";
 import AreYouSure from "../AreYouSureModal";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
 
 const AdoptionDetailsModal = ({ onClose, id }) => {
   const [adoption, setAdoption] = useState(null);
@@ -14,6 +16,8 @@ const AdoptionDetailsModal = ({ onClose, id }) => {
   const [errorDelete, setErrorDelete] = useState(false);
   const [sure, setSure] = useState(false);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const {user} = useContext(UserContext);
 
   useEffect(() => {
     if (id) {
@@ -23,6 +27,12 @@ const AdoptionDetailsModal = ({ onClose, id }) => {
       }, 1300);
     }
   }, []);
+
+  useEffect(() => {
+    if (user.role !== "admin") {
+      navigate("/notfound");
+    }
+  }, [user]);
 
   const getAdoption = async () => {
     try {

@@ -4,6 +4,7 @@ import PetCard from "./PetCard";
 import SelectionBox from "./SelectionPetPage";
 import { useLocation, useNavigate } from "react-router-dom";
 import ErrorModal from "../ErrorModal";
+import { UserContext } from "../context/UserContext";
 
 const PetsAdopted = () => {
   const location = useLocation();
@@ -18,6 +19,13 @@ const PetsAdopted = () => {
   const [selectedValue, setSelectedValue] = useState(selectedValueFromURL);
   const [loading, setLoading] = useState(true);
   const [systemError, setSystemError] = useState(false);
+  const { user } = useContext(UserContext);
+
+  useEffect(() => {
+    if (user.role !== "admin") {
+      navigate("/notfound");
+    }
+  }, [user]);
 
   const handleOptionClick = (value) => {
     setSelectedValue(value);

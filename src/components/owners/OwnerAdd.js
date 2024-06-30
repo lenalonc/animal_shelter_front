@@ -29,7 +29,6 @@ const OwnerAdd = () => {
     }
   }, [user]);
 
-
   useEffect(() => {
     const getFields = async () => {
       try {
@@ -124,7 +123,7 @@ const OwnerAdd = () => {
   };
 
   return (
-    <div className="owner-add-page" style={{minHeight: "80vh"}}>
+    <div className="owner-add-page" style={{ minHeight: "80vh" }}>
       {loading ? (
         <div className="loader"></div>
       ) : (

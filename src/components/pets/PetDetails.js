@@ -1,10 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "../../api/Api";
 import HeartButton from "./HeartButton";
 import { UserContext } from "../context/UserContext";
 import EditPetModal from "./EditPetModal";
-import { setSelectionRange } from "@testing-library/user-event/dist/utils";
 import ErrorModal from "../ErrorModal";
 
 const PetDetails = () => {
@@ -20,6 +19,7 @@ const PetDetails = () => {
   const [noPet, setNoPet] = useState(false);
   const[systemError, setSystemError] = useState(false);
   const[systemError2, setSystemError2] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setTimeout(() => {
@@ -52,7 +52,9 @@ const PetDetails = () => {
         const response = await api.get(`/pet/${id}`);
         setPet(response.data);
         loadPetImage(response.data);
-      }
+        if (user.role !== "admin" && response.data.adopted === true) {
+          navigate("/notfound");
+        }      }
     } catch (err) {
       console.error("Error fetching pet details:", err);
       setNoPet(true);
@@ -123,6 +125,11 @@ const PetDetails = () => {
     }
   };
 
+  const closeErrorPet = () => {
+    setNoPet(false);
+    navigate("/notfound");
+  }
+
   return (
     <div className="pet-details" style={{ minHeight: "80vh" }}>
       {loading && <div className="loader"></div>}
@@ -186,7 +193,7 @@ const PetDetails = () => {
           img={hasPicture}
         />
       )}
-      {noPet && <ErrorModal message={"System could not load pet details"} onClose={()=>setNoPet(false)}/>}
+      {noPet && <ErrorModal message={"System could not load pet details"} onClose={closeErrorPet}/>}
       {systemError && <ErrorModal message={"System could not save this pet in favorites"} onClose={()=>setSystemError(false)}/> }
       {systemError2 && <ErrorModal message={"System could not remove this pet from favorites"} onClose={()=>setSystemError2(false)}/> }
     </div>
