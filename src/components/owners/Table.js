@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 
-//TODO: if no data is in filteredData show a message that says that no values match your search
-
 const TableCustom = ({ selectedRow, onRowClick, data }) => {
   const [searchQuery, setSearchQuery] = useState("");
 

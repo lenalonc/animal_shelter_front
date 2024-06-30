@@ -53,8 +53,7 @@ const EditPetModal = ({ onClose, pet, setDeleted, refresh, img }) => {
       if (picture) {
         savePictureLocally(picture);
       }
-      // setShowSuccessModal(true);
-      setShowErrorModal(true);
+      setShowSuccessModal(true);
       refresh();
     } catch (err) {
       if (err.response) {
