@@ -8,7 +8,6 @@ import SuccessModal from "../Success modal";
 import WarningModal from "../WarningModal";
 import ErrorModal from "../ErrorModal";
 import AreYouSure from "../AreYouSureModal";
-//TODO: brisanje slike preko funkc u backu ako slika postoji
 
 const EditPetModal = ({ onClose, pet, setDeleted, refresh, img }) => {
   const navigate = useNavigate();
